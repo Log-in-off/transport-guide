@@ -29,6 +29,16 @@ struct Bus {
     std::vector <Stop*> stops;
 };
 
+struct BusInfo {
+
+    std::string name;
+    uint32_t countStops;
+    uint32_t countUnicStops;
+    double_t distance;
+
+    BusInfo():name(""), countStops(0), countUnicStops(0), distance(0) {}
+};
+
 
 
 class TransportCatalogue
@@ -38,7 +48,7 @@ public:
     //void FindStop();
     void AddBus(Requst &requst);
     //void FindBus();
-    void GetBusInfo(const std::string &namebus);
+    bool GetBusInfo(Requst &requst, BusInfo &answer);
 private:
     std::deque <Stop> stops_;
     std::unordered_map <std::string_view, Stop *> stopnameToStops_;

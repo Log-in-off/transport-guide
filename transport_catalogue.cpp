@@ -101,3 +101,23 @@ void TransportCatalogue::AddBus(Requst & requst)
     //    std::cout <<value << endl;
     //std::cout << endl;
 }
+
+bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
+{
+    size_t fStart = requst.start.find_first_not_of(" ");
+    size_t fEnd = requst.start.size() - 1;
+
+    while (requst.start.at(fEnd) == ' ')
+        fEnd--;
+    string_view nameBus = requst.start.substr(fStart, fEnd - fStart + 1);
+
+
+    auto fBus = busNameToBus_.find(nameBus);
+    if (fBus == busNameToBus_.end())
+        return false;
+
+    answer.name = nameBus;
+    return true;
+
+
+}

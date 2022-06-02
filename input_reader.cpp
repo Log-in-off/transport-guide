@@ -49,6 +49,4 @@ void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogu
     {
         catalogue.AddBus(value);
     }
-
-
 }
