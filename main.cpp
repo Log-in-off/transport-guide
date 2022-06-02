@@ -23,7 +23,7 @@ int main()
     InputReader reader;
     TransportCatalogue catalogue;
     reader.GetQueries(ss, catalogue);
-
+    cout << "End" << endl;
 
     return 0;
 }

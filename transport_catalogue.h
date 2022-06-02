@@ -34,9 +34,9 @@ struct Bus {
 class TransportCatalogue
 {
 public:
-    void AddStop(Requst &Requst);
+    void AddStop(Requst &requst);
     //void FindStop();
-    void AddBus(Requst &Requst);
+    void AddBus(Requst &requst);
     //void FindBus();
     void GetBusInfo(const std::string &namebus);
 private:

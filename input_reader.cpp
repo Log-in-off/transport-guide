@@ -11,7 +11,7 @@ void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogu
     int count;
     iStream >> count;
     string input;
-    for (int i= 0; i < count; i++)
+    for (int i= 0; i <= count; i++)
     {
         getline(iStream, input);
         //cout << input << endl;
