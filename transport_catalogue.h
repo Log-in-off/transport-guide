@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-#include <geo.h>
+#include "geo.h"
 struct Stop {
     std::string name;
     Coordinates coordinates;
@@ -27,6 +27,7 @@ struct BusInput {
 struct Bus {
     std::string name;
     std::vector <Stop*> stops;
+    bool cycle;
 };
 
 struct BusInfo {

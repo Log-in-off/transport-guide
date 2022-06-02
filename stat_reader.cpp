@@ -2,7 +2,9 @@
 
 #include "stat_reader.h"
 
+#include <iomanip>
 #include "iostream"
+#include <limits>
 
 using namespace std;
 
@@ -38,8 +40,17 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
         BusInfo answer;
         if (catalogue.GetBusInfo(value, answer))
         {
-            out << answer.name << endl;
+            //Bus 256: 6 stops on route, 5 unique stops, 4371.02 route length
+            out << "Bus " << answer.name << ": " << answer.countStops
+                          << " stops on route, " << answer.countUnicStops
+                          << " unique stops, "<< std::setprecision(6) << answer.distance << " route length"<< endl;
         }
+        else
+        {
+            out << "Bus "<< answer.name <<": not found" << endl;
+        }
+
+
     }
 
 }

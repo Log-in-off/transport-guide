@@ -3,6 +3,7 @@
 #include <iomanip>
 #include "iostream"
 #include <limits>
+#include <set>
 using namespace std;
 
 
@@ -86,6 +87,7 @@ void TransportCatalogue::AddBus(Requst & requst)
 
     Bus newBus;
     newBus.name = move(nameS);
+    newBus.cycle = cycle;
     for (string_view value : stops)
     {
         auto f = stopnameToStops_.find(value);
@@ -110,14 +112,28 @@ bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
     while (requst.start.at(fEnd) == ' ')
         fEnd--;
     string_view nameBus = requst.start.substr(fStart, fEnd - fStart + 1);
+    answer.name = nameBus;
 
 
     auto fBus = busNameToBus_.find(nameBus);
     if (fBus == busNameToBus_.end())
         return false;
 
-    answer.name = nameBus;
+
+    Stop *firstStop = nullptr;
+    set <string_view> uinicStops;
+    for (auto value : fBus->second->stops)
+    {
+        uinicStops.insert(value->name);
+        if (firstStop)
+        {
+            answer.distance += ComputeDistance(firstStop->coordinates, value->coordinates);
+        }
+        firstStop = value;
+    }
+
+    answer.countStops = fBus->second->stops.size();
+    answer.countUnicStops = uinicStops.size();
+
     return true;
-
-
 }
