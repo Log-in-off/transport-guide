@@ -149,4 +149,55 @@ void firstTest()
     StatReader statReader;
     statReader.GetQueries(stat, cout, catalogue);
     cout << "End" << endl;
+
+
+    /*
+Bus 256: 6 stops on route, 5 unique stops, 4371.02 route length
+Bus 750: 5 stops on route, 3 unique stops, 20939.5 route length
+Bus 751: not found
+    */
+}
+
+
+void secondTest()
+{
+    std::stringstream ss("");
+    ss << "13\n";
+    ss << "Stop Tolstopaltsevo: 55.611087, 37.20829\n";
+    ss << "Stop Marushkino: 55.595884, 37.209755\n";
+    ss << "Bus 256: Biryulyovo Zapadnoye > Biryusinka > Universam > Biryulyovo Tovarnaya > Biryulyovo Passazhirskaya > Biryulyovo Zapadnoye\n";
+    ss << "Bus 750: Tolstopaltsevo - Marushkino - Rasskazovka\n";
+    ss << "Stop Rasskazovka: 55.632761, 37.333324\n";
+    ss << "Stop Biryulyovo Zapadnoye: 55.574371, 37.6517\n";
+    ss << "Stop Biryusinka: 55.581065, 37.64839\n";
+    ss << "Stop Universam: 55.587655, 37.645687\n";
+    ss << "Stop Biryulyovo Tovarnaya: 55.592028, 37.653656\n";
+    ss << "Stop Biryulyovo Passazhirskaya: 55.580999, 37.659164\n";
+    ss << "Bus 828: Biryulyovo Zapadnoye > Universam > Rossoshanskaya ulitsa > Biryulyovo Zapadnoye\n";
+    ss << "Stop Rossoshanskaya ulitsa: 55.595579, 37.605757\n";
+    ss << "Stop Prazhskaya: 55.611678, 37.603831\n";
+
+    std::stringstream stat("");
+    stat << "6\n";
+    stat << "Bus 256\n";
+    stat << "Bus 750\n";
+    stat << "Bus 751\n";
+    stat << "Stop Samara\n";
+    stat << "Stop Prazhskaya\n";
+    stat << "Stop Biryulyovo Zapadnoye\n";
+
+    InputReader reader;
+    StatReader statReader;
+    TransportCatalogue catalogue;
+    reader.GetQueries(ss, catalogue);
+    statReader.GetQueries(stat, cout, catalogue);
+
+    /*
+Bus 256: 6 stops on route, 5 unique stops, 4371.02 route length
+Bus 750: 5 stops on route, 3 unique stops, 20939.5 route length
+Bus 751: not found
+Stop Samara: not found
+Stop Prazhskaya: no buses
+Stop Biryulyovo Zapadnoye: buses 256 828
+    */
 }

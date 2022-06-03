@@ -36,21 +36,42 @@ void TransportCatalogue::AddStop(Requst &requst)
     cout << latv << "|" << lngv << endl;
     cout <<std::setprecision(6) << lat << "|" << lng << endl;
     */
-    stops_.push_back({move(nameS), {lat, lng}});
+    stops_.push_back({move(nameS), {lat, lng}, {}});
     stopnameToStops_.insert({stops_.back().name, &stops_.back()});
 
+}
+
+bool TransportCatalogue::FindStop(Requst &requst, StopInfo &answer)
+{
+    size_t fStart = requst.start.find_first_not_of(" ");
+    size_t fEnd = requst.start.size() - 1;
+
+    while (requst.start.at(fEnd) == ' ')
+        fEnd--;
+    string_view nameStop = requst.start.substr(fStart, fEnd - fStart + 1);
+    answer.name = nameStop;
+
+    auto fStop = stopnameToStops_.find(nameStop);
+    if (fStop == stopnameToStops_.end())
+        return false;
+
+    for (auto value : fStop->second->buses)
+    {
+        answer.buses.push_back(value);
+    }
+
+    return true;
 }
 
 void TransportCatalogue::AddBus(Requst & requst)
 {
     size_t fName = requst.start.find_first_of(':');
 
-    //size_t fSplitCoordinates = requst.start.find_first_of(',');
     string_view name = requst.start.substr(0, fName);
     string nameS {name};
     vector <string_view> stops;
     size_t fStartStops = fName+1;
-    bool work = true;
+    bool not_end_request = true;
     bool cycle = false;
     string spliter = ">";
 
@@ -60,12 +81,12 @@ void TransportCatalogue::AddBus(Requst & requst)
         spliter = "-";
     }
 
-    while (work) {
+    while (not_end_request) {
         size_t fSplit = requst.start.find_first_of(spliter, fStartStops);
 
         if (fSplit == string::npos)
         {
-            work = false;
+            not_end_request = false;
             fSplit = requst.start.size();
         }
 
@@ -79,23 +100,22 @@ void TransportCatalogue::AddBus(Requst & requst)
         fStartStops = fSplit + 1;
     }
 
-    if (cycle)
-    {
-        for (int i = stops.size() - 2; i >= 0 ;i-- )
-            stops.push_back(stops.at(i));
-    }
-
-    Bus newBus;
-    newBus.name = move(nameS);
-    newBus.cycle = cycle;
+    buses_.push_back({move(nameS), {}, cycle});
     for (string_view value : stops)
     {
         auto f = stopnameToStops_.find(value);
-        newBus.stops.push_back(f->second);
+        buses_.back().stops.push_back(f->second);
+        f->second->buses.insert(buses_.back().name);
     }
 
-    buses.push_back(move(newBus));
-    busNameToBus_.insert({buses.back().name, &buses.back()});
+    if (cycle)
+    {
+        for (int i = stops.size() - 2; i >= 0 ; i-- )
+            buses_.back().stops.push_back(buses_.back().stops.at(i));
+    }
+
+
+    busNameToBus_.insert({buses_.back().name, &buses_.back()});
 
     //std::cout << requst.start;
     //std::cout <<nameS << endl;

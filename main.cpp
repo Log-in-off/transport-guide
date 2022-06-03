@@ -10,6 +10,8 @@ using namespace std;
 int main()
 {
     firstTest();
+    secondTest();
+    return 0;
 
     InputReader reader;
     TransportCatalogue catalogue;

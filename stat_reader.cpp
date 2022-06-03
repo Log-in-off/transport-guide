@@ -11,6 +11,7 @@ using namespace std;
 void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalogue &catalogue)
 {
     std::deque <Requst> busses;
+    std::deque <Requst> stops;
     int count;
     iStream >> count;
     string input;
@@ -25,6 +26,11 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
         {
             head = sizeof"Bus";
             requsts = &busses;
+        }
+        else if (input.front() == 'S')
+        {
+            head = sizeof"Stop";
+            requsts = &stops;
         }
         else
             continue;
@@ -49,8 +55,33 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
         {
             out << "Bus "<< answer.name <<": not found" << endl;
         }
+    }
 
+    for(auto &value: stops)
+    {
+        StopInfo answer;
+        if (catalogue.FindStop(value, answer))
+        {
+            //Stop Prazhskaya: no buses
+            //Stop Biryulyovo Zapadnoye: buses 256 828
+            if (answer.buses.size())
+            {
+                out << "Stop "<< answer.name <<": buses";
+                for (auto bus:answer.buses)
+                    out << " "<< bus;
+                out << endl;
+            }
+            else
+            {
+                out << "Stop "<< answer.name <<": no buses" << endl;
+            }
 
+        }
+        else
+        {
+            //Stop Samara: not found
+            out << "Stop "<< answer.name <<": not found" << endl;
+        }
     }
 
 }
