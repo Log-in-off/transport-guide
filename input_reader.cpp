@@ -23,8 +23,6 @@ void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogu
         {
             head = sizeof"Bus";
             requsts = &busses;
-
-            //startRequest = input
         }
         else if (input.front() == 'S')
         {

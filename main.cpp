@@ -11,6 +11,7 @@ int main()
 {
     firstTest();
     secondTest();
+    therdTest();
     return 0;
 
     InputReader reader;
