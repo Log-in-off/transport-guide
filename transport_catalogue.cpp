@@ -53,18 +53,7 @@ void TransportCatalogue::AddStop(Requst &requst)
 
             fSplitSection = fEndSection;
             auto fStop = stopnameToStops_.find(nameStation);
-
-            // проблемное место
-            std::pair <Stop*, Stop*> obj = {fMainStop->second, fStop->second}; // формируем ключ
-            DurationHasher hash; // объявляем хешер для проверки
-            cout << nameStation <<" " << duration << " hash " << hash(obj) <<endl;
-
-            // добавляем в два одинаковых объекта. tableDurations и tableDurations_
-            // в одном случае падает, в другом нет.
-            std::unordered_map<std::pair <Stop*, Stop*>, int, DurationHasher> tableDurations;
-            tableDurations[obj] = duration;
-            this->tableDurations_[obj] = duration;
-
+            tableDurations_[{fMainStop->second, fStop->second}] = duration;
         }
     }
 }
@@ -128,22 +117,51 @@ void TransportCatalogue::AddBus(Requst & requst)
         fStartStops = fSplit + 1;
     }
 
-    buses_.push_back({move(nameS), {}, cycle});
+    Stop *firstStop = nullptr;
+    set <string_view> uinicStops;
+    uint32_t factDistans = 0;
+    double_t geoDist = 0;
+
+    buses_.push_back({move(nameS), {}, cycle, 0, 0, 0});
+
+    Bus & addedBus = buses_.back();
     for (string_view value : stops)
     {
         auto f = stopnameToStops_.find(value);
-        buses_.back().stops.push_back(f->second);
-        f->second->buses.insert(buses_.back().name);
+        addedBus.stops.push_back(f->second);
+        f->second->buses.insert(addedBus.name);
+        uinicStops.insert(value);
+        if (firstStop)
+        {
+            geoDist += ComputeDistance(firstStop->coordinates, f->second->coordinates);
+            auto fDist = tableDurations_.find({firstStop, f->second});
+            if (fDist == tableDurations_.end())
+                fDist = tableDurations_.find({f->second, firstStop});
+            factDistans += fDist->second;
+        }
+        firstStop = f->second;
     }
 
     if (cycle)
     {
+        geoDist *= 2;
         for (int i = stops.size() - 2; i >= 0 ; i-- )
-            buses_.back().stops.push_back(buses_.back().stops.at(i));
+        {
+            addedBus.stops.push_back(addedBus.stops.at(i));
+
+            auto fDist = tableDurations_.find({addedBus.stops.at(addedBus.stops.size() - 2), addedBus.stops.at(addedBus.stops.size() - 1)});
+            if (fDist == tableDurations_.end())
+                fDist = tableDurations_.find({addedBus.stops.at(addedBus.stops.size() - 1), addedBus.stops.at(addedBus.stops.size() - 2)});
+
+            factDistans += fDist->second;
+        }
     }
 
 
-    busNameToBus_.insert({buses_.back().name, &buses_.back()});
+    busNameToBus_.insert({addedBus.name, &addedBus});
+    addedBus.countUnicStops = uinicStops.size();
+    addedBus.distance = factDistans;
+    addedBus.curvature =  static_cast<double_t>(factDistans) /geoDist;
 
     //std::cout << requst.start;
     //std::cout <<nameS << endl;
@@ -167,27 +185,10 @@ bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
     if (fBus == busNameToBus_.end())
         return false;
 
-
-    Stop *firstStop = nullptr;
-    set <string_view> uinicStops;
-    double_t calcDist = 0;
-    for (auto value : fBus->second->stops)
-    {
-        uinicStops.insert(value->name);
-        if (firstStop)
-        {
-            calcDist += ComputeDistance(firstStop->coordinates, value->coordinates);
-            auto fDist = tableDurations_.find({value, firstStop});
-            if (fDist == tableDurations_.end())
-                fDist = tableDurations_.find({firstStop, value});
-            answer.distance += fDist->second;
-        }
-        firstStop = value;
-    }
-
-    answer.curvature = static_cast<double_t>( answer.distance) /calcDist;
+    answer.curvature = fBus->second->curvature;
     answer.countStops = fBus->second->stops.size();
-    answer.countUnicStops = uinicStops.size();
+    answer.countUnicStops = fBus->second->countUnicStops;
+    answer.distance = fBus->second->distance;
 
     return true;
 }

@@ -8,6 +8,7 @@
 #include <string>
 
 #include "geo.h"
+
 struct Stop {
     std::string name;
     Coordinates coordinates;
@@ -30,6 +31,9 @@ struct Bus {
     std::string name;
     std::vector <Stop*> stops;
     bool cycle;
+    uint32_t countUnicStops;
+    uint32_t distance;
+    double_t curvature;
 };
 
 struct BusInfo {
@@ -46,23 +50,12 @@ struct StopInfo {
     std::string name;
     std::vector <std::string_view> buses;
 };
-/*
-struct Duration
-{
-    std::pair <Stop*, Stop*> dur;
-
-};
-
-bool operator==(const Duration &lh, const Duration &rh )
-{
-    return lh.dur == rh.dur;
-}
-*/
 
 struct DurationHasher {
     size_t operator() (const std::pair <Stop*, Stop*>& f) const {
         std::hash<Stop*> dHasher;
         return (dHasher(f.first) << 32) | dHasher(f.second);
+        //return std::hash<void*>{}(f.first) * 37 + std::hash<void*>{}(f.second) * (37 * 37);
     }
 };
 
