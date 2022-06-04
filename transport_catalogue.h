@@ -36,16 +36,35 @@ struct BusInfo {
     std::string name;
     uint32_t countStops;
     uint32_t countUnicStops;
-    double_t distance;
+    uint32_t distance;
+    double_t curvature;
 
-    BusInfo():name(""), countStops(0), countUnicStops(0), distance(0) {}
+    BusInfo():name(""), countStops(0), countUnicStops(0), distance(0), curvature(0) {}
 };
 
 struct StopInfo {
     std::string name;
     std::vector <std::string_view> buses;
 };
+/*
+struct Duration
+{
+    std::pair <Stop*, Stop*> dur;
 
+};
+
+bool operator==(const Duration &lh, const Duration &rh )
+{
+    return lh.dur == rh.dur;
+}
+*/
+
+struct DurationHasher {
+    size_t operator() (const std::pair <Stop*, Stop*>& f) const {
+        std::hash<Stop*> dHasher;
+        return (dHasher(f.first) << 32) | dHasher(f.second);
+    }
+};
 
 class TransportCatalogue
 {
@@ -60,4 +79,5 @@ private:
     std::unordered_map <std::string_view, Stop *> stopnameToStops_;
     std::deque <Bus> buses_;
     std::unordered_map <std::string_view, Bus *> busNameToBus_;
+    std::unordered_map<std::pair <Stop*, Stop*>, int, DurationHasher> tableDurations_;
 };

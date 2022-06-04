@@ -68,10 +68,12 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
             BusInfo answer;
             if (catalogue.GetBusInfo(req, answer))
             {
-                //Bus 256: 6 stops on route, 5 unique stops, 4371.02 route length
+                //Bus 256: 6 stops on route, 5 unique stops, 5950 route length, 1.36124 curvature
                 out << "Bus " << answer.name << ": " << answer.countStops
                               << " stops on route, " << answer.countUnicStops
-                              << " unique stops, "<< std::setprecision(6) << answer.distance << " route length"<< endl;
+                              << " unique stops, " << answer.distance << " route length, "
+                              << std::setprecision(6) << answer.curvature << " curvature"
+                              << endl;
             }
             else
             {

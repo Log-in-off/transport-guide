@@ -13,7 +13,8 @@ void TransportCatalogue::AddStop(Requst &requst)
 
     size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
     string_view name = requst.start.substr(0, fName);
-    if (stopnameToStops_.find(name) == stopnameToStops_.end())
+    auto fMainStop = stopnameToStops_.find(name);
+    if ( fMainStop == stopnameToStops_.end())
     {
         //первый проход добавления. добавляем остановки без заполнения хеша расстояний
         string nameS {name};
@@ -24,6 +25,7 @@ void TransportCatalogue::AddStop(Requst &requst)
     }
     else
     {
+        // заполняем хеш-таблицу расстояний
         bool not_end_request = true;
         size_t fSplitSection = requst.start.find_first_of(',', fSplitCoordinates +1);
         if (fSplitSection == string::npos)
@@ -50,7 +52,19 @@ void TransportCatalogue::AddStop(Requst &requst)
             const int duration = ::stoi(requst.start.substr(fStartDur, fEndDur-fStartDur).data());
 
             fSplitSection = fEndSection;
-            cout << nameStation <<" " << duration << endl;
+            auto fStop = stopnameToStops_.find(nameStation);
+
+            // проблемное место
+            std::pair <Stop*, Stop*> obj = {fMainStop->second, fStop->second}; // формируем ключ
+            DurationHasher hash; // объявляем хешер для проверки
+            cout << nameStation <<" " << duration << " hash " << hash(obj) <<endl;
+
+            // добавляем в два одинаковых объекта. tableDurations и tableDurations_
+            // в одном случае падает, в другом нет.
+            std::unordered_map<std::pair <Stop*, Stop*>, int, DurationHasher> tableDurations;
+            tableDurations[obj] = duration;
+            this->tableDurations_[obj] = duration;
+
         }
     }
 }
@@ -156,16 +170,22 @@ bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
 
     Stop *firstStop = nullptr;
     set <string_view> uinicStops;
+    double_t calcDist = 0;
     for (auto value : fBus->second->stops)
     {
         uinicStops.insert(value->name);
         if (firstStop)
         {
-            answer.distance += ComputeDistance(firstStop->coordinates, value->coordinates);
+            calcDist += ComputeDistance(firstStop->coordinates, value->coordinates);
+            auto fDist = tableDurations_.find({value, firstStop});
+            if (fDist == tableDurations_.end())
+                fDist = tableDurations_.find({firstStop, value});
+            answer.distance += fDist->second;
         }
         firstStop = value;
     }
 
+    answer.curvature = static_cast<double_t>( answer.distance) /calcDist;
     answer.countStops = fBus->second->stops.size();
     answer.countUnicStops = uinicStops.size();
 
