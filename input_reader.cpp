@@ -38,10 +38,12 @@ void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogu
         requsts->back().start.remove_prefix(head);
     }
 
-    for(auto &value: stops)
-    {
-        catalogue.AddStop(value);
-    }
+    for (int i = 0; i <2; i++)
+        for(auto &value: stops)
+        {
+            catalogue.AddStop(value);
+        }
+
 
     for(auto &value: busses)
     {

@@ -11,34 +11,48 @@ void TransportCatalogue::AddStop(Requst &requst)
 {
     size_t fName = requst.start.find_first_of(':');
 
-    size_t fSplitCoordinates = requst.start.find_first_of(',');
+    size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
     string_view name = requst.start.substr(0, fName);
-    string nameS {name};
+    if (stopnameToStops_.find(name) == stopnameToStops_.end())
+    {
+        //первый проход добавления. добавляем остановки без заполнения хеша расстояний
+        string nameS {name};
+        const double lat = ::stod(requst.start.substr(fName + 2, requst.start.size() - fSplitCoordinates-1).data());
+        const double lng = ::stod(requst.start.substr(fSplitCoordinates + 2, requst.start.size() - fSplitCoordinates).data());
+        stops_.push_back({move(nameS), {lat, lng}, {}});
+        stopnameToStops_.insert({stops_.back().name, &stops_.back()});
+    }
+    else
+    {
+        bool not_end_request = true;
+        size_t fSplitSection = requst.start.find_first_of(',', fSplitCoordinates +1);
+        if (fSplitSection == string::npos)
+            return;
+        while (not_end_request)
+        {
+            size_t fStartDur = requst.start.find_first_of("0123456789", fSplitSection +1);
+            size_t fEndDur = requst.start.find_first_of("m", fStartDur +1);
+            size_t fStartStation = fEndDur;
+            for (int i = 0; i < 3; i++)
+                fStartStation = requst.start.find_first_not_of(" ", fStartStation +1);
+            size_t fEndSection = requst.start.find_first_of(",", fStartStation +1);
+            if (fEndSection == string::npos)
+            {
+                fEndSection = requst.start.size();
+                not_end_request = false;
+            }
 
+            size_t fEndStation = fEndSection-1;
+            while (requst.start.at(fEndStation) == ' ')
+                fEndStation--;
 
-    // перевод в double  stod(string);
-    //double lat = ::atof(stop.start.substr(fName + 1, stop.start.size() - fName).data());
-    //double lng = ::atof(stop.start.substr(fSplitCoordinates + 1, stop.start.size() - fSplitCoordinates).data());
-    //string_view latv = stop.start.substr(fName +2 , stop.start.size() - fName);
-    //string_view lngv = stop.start.substr(fSplitCoordinates + 2, stop.start.size() - fSplitCoordinates);
+            string_view nameStation = requst.start.substr(fStartStation, fEndStation-fStartStation+1);
+            const int duration = ::stoi(requst.start.substr(fStartDur, fEndDur-fStartDur).data());
 
-
-
-    double lat = ::stod(requst.start.substr(fName + 2, requst.start.size() - fSplitCoordinates-1).data());
-    double lng = ::stod(requst.start.substr(fSplitCoordinates + 2, requst.start.size() - fSplitCoordinates).data());
-
-    //double lat = ::atof(stop.start.substr(fName + 2, stop.start.size() - fSplitCoordinates-1).data());
-    //double lng = ::atof(stop.start.substr(fSplitCoordinates + 2, stop.start.size() - fSplitCoordinates).data());
-    /*
-    string_view latv = requst.start.substr(fName +2 , requst.start.size() - fSplitCoordinates-1);
-    string_view lngv = requst.start.substr(fSplitCoordinates + 2, requst.start.size() - fSplitCoordinates);
-    cout << nameS << endl;
-    cout << latv << "|" << lngv << endl;
-    cout <<std::setprecision(6) << lat << "|" << lng << endl;
-    */
-    stops_.push_back({move(nameS), {lat, lng}, {}});
-    stopnameToStops_.insert({stops_.back().name, &stops_.back()});
-
+            fSplitSection = fEndSection;
+            cout << nameStation <<" " << duration << endl;
+        }
+    }
 }
 
 bool TransportCatalogue::FindStop(Requst &requst, StopInfo &answer)

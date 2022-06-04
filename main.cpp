@@ -9,9 +9,10 @@ using namespace std;
 
 int main()
 {
-    firstTest();
-    secondTest();
-    therdTest();
+    //firstTest();
+    //secondTest();
+    //therdTest();
+    testTask3();
     return 0;
 
     InputReader reader;
