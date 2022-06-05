@@ -17,7 +17,7 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
     iStream >> count;
     for (int i= 0; i <= count; i++)
     {
-        GetReques(iStream, stops, buses);
+        GetRequests(iStream, stops, buses);
     }
 
     // дважды проходимся по списку остановок.
@@ -37,7 +37,7 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
     }
 }
 
-void InputReader::GetReques(std::istream &iStream,  std::deque <catalogue::Requst> &stops, std::deque <catalogue::Requst> &buses)
+void InputReader::GetRequests(std::istream &iStream,  std::deque <catalogue::Requst> &stops, std::deque <catalogue::Requst> &buses)
 {
     string input;
     getline(iStream, input);

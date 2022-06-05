@@ -24,7 +24,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
         if (input.empty())
             continue;        
 
-        typeRequset type;
+        TypeRequset type;
         catalogue::Requst req{"", input};
         if (!GetReques(input,type, req))
             continue;
@@ -64,7 +64,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
     }
 }
 
-bool StatReader::GetReques(const std::string & input, typeRequset &type, catalogue::Requst &request)
+bool StatReader::GetReques(const std::string & input, TypeRequset &type, catalogue::Requst &request)
 {
     if (input.empty())
         return false;

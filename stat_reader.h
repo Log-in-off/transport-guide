@@ -16,12 +16,12 @@ class StatReader
 public:
     void GetQueries(std::istream & iStream, std::ostream &out , catalogue::TransportCatalogue &catalogue);
 private:
-    enum typeRequset
+    enum TypeRequset
     {
         getBus,
         getStop
     };
-    bool GetReques(const std::string &input, typeRequset &type, catalogue::Requst &request);
+    bool GetReques(const std::string &input, TypeRequset &type, catalogue::Requst &request);
 };
 
 }
