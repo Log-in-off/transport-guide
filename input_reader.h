@@ -15,6 +15,8 @@ class InputReader
 {
 public:
     void GetQueries(std::istream & iStream, catalogue::TransportCatalogue &catalogue);
+private:
+    void GetReques(std::istream &iStream, std::deque<catalogue::Requst> &stops, std::deque<catalogue::Requst> &buses);
 };
 
 }

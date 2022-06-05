@@ -15,8 +15,6 @@ namespace stat
 
 void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::TransportCatalogue &catalogue)
 {
-    std::deque <catalogue::Requst> busses;
-    std::deque <catalogue::Requst> stops;
     int count;
     iStream >> count;
     string input;
@@ -24,26 +22,14 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
     {
         getline(iStream, input);
         if (input.empty())
-            continue;
-        size_t head;
-        deque <catalogue::Requst> * requsts;
-        if (input.front() == 'B')
-        {
-            head = sizeof"Bus";
-            requsts = &busses;
-        }
-        else if (input.front() == 'S')
-        {
-            head = sizeof"Stop";
-            requsts = &stops;
-        }
-        else
-            continue;
+            continue;        
 
+        typeRequset type;
         catalogue::Requst req{"", input};
-        req.start.remove_prefix(head);
+        if (!GetReques(input,type, req))
+            continue;
 
-        if (requsts == &stops)
+        if (type == getStop)
         {
             catalogue::StopInfo answer;
             if (catalogue.FindStop(req, answer))
@@ -56,17 +42,12 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
                     out << endl;
                 }
                 else
-                {
                     out << "Stop "<< answer.name <<": no buses" << endl;
-                }
             }
             else
-            {
                 out << "Stop "<< answer.name <<": not found" << endl;
-            }
-
         }
-        else if (requsts == &busses)
+        else if (type == getBus)
         {
             catalogue::BusInfo answer;
             if (catalogue.GetBusInfo(req, answer))
@@ -78,11 +59,37 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
                               << endl;
             }
             else
-            {
                 out << "Bus "<< answer.name <<": not found" << endl;
-            }
         }
     }
+}
+
+bool StatReader::GetReques(const std::string & input, typeRequset &type, catalogue::Requst &request)
+{
+    if (input.empty())
+        return false;
+
+    const string headBus = "Bus ";
+    const string headStop = "Stop ";
+    size_t head;
+
+    size_t findHeadBus = input.find(headBus);
+    size_t findHeadStop = input.find(headStop);
+    if (findHeadBus == 0)
+    {
+        head = headBus.size();
+        type = getBus;
+    }
+    else if (findHeadStop == 0)
+    {
+        head = headStop.size();
+        type = getStop;
+    }
+    else
+        return false;
+
+    request.start.remove_prefix(head);
+    return true;
 }
 
 }
