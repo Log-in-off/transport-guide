@@ -8,10 +8,15 @@
 
 using namespace std;
 
-void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalogue &catalogue)
+namespace TG
 {
-    std::deque <Requst> busses;
-    std::deque <Requst> stops;
+
+namespace stat
+{
+void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::TransportCatalogue &catalogue)
+{
+    std::deque <catalogue::Requst> busses;
+    std::deque <catalogue::Requst> stops;
     int count;
     iStream >> count;
     string input;
@@ -21,7 +26,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
         if (input.empty())
             continue;
         size_t head;
-        deque <Requst> * requsts;
+        deque <catalogue::Requst> * requsts;
         if (input.front() == 'B')
         {
             head = sizeof"Bus";
@@ -35,12 +40,12 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
         else
             continue;
 
-        Requst req{"", input};
+        catalogue::Requst req{"", input};
         req.start.remove_prefix(head);
 
         if (requsts == &stops)
         {
-            StopInfo answer;
+            catalogue::StopInfo answer;
             if (catalogue.FindStop(req, answer))
             {
                 if (answer.buses.size())
@@ -65,7 +70,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
         }
         else if (requsts == &busses)
         {
-            BusInfo answer;
+            catalogue::BusInfo answer;
             if (catalogue.GetBusInfo(req, answer))
             {
                 //Bus 256: 6 stops on route, 5 unique stops, 5950 route length, 1.36124 curvature
@@ -83,3 +88,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, TransportCatalo
     }
 
 }
+
+}
+}
+

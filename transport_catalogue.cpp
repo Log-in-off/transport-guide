@@ -6,7 +6,11 @@
 #include <set>
 using namespace std;
 
+namespace TG
+{
 
+namespace catalogue
+{
 void TransportCatalogue::AddStop(Requst &requst)
 {
     size_t fName = requst.start.find_first_of(':');
@@ -191,4 +195,6 @@ bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
     answer.distance = fBus->second->distance;
 
     return true;
+}
+}
 }

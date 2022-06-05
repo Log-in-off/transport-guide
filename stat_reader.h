@@ -6,11 +6,20 @@
 
 #include "transport_catalogue.h"
 
+namespace TG
+{
+namespace stat
+{
+
 class StatReader
 {
 public:
-    void GetQueries(std::istream & iStream, std::ostream &out , TransportCatalogue &catalogue);
+    void GetQueries(std::istream & iStream, std::ostream &out , catalogue::TransportCatalogue &catalogue);
 
 private:
 
 };
+
+}
+}
+

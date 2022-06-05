@@ -4,10 +4,16 @@
 
 using namespace std;
 
-void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogue)
+namespace TG
 {
-    std::deque <Requst> stops;
-    std::deque <Requst> busses;
+
+namespace input
+{
+
+void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogue &catalogue)
+{
+    std::deque <catalogue::Requst> stops;
+    std::deque <catalogue::Requst> busses;
     int count;
     iStream >> count;
     string input;
@@ -18,7 +24,7 @@ void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogu
         if (input.empty())
             continue;
         size_t head;
-        deque <Requst> * requsts;
+        deque <catalogue::Requst> * requsts;
         if (input.front() == 'B')
         {
             head = sizeof"Bus";
@@ -49,4 +55,8 @@ void InputReader::GetQueries(std::istream &iStream, TransportCatalogue &catalogu
     {
         catalogue.AddBus(value);
     }
+}
+
+}
+
 }

@@ -9,9 +9,15 @@
 
 #include "geo.h"
 
+namespace TG
+{
+
+namespace catalogue
+{
+
 struct Stop {
     std::string name;
-    Coordinates coordinates;
+    geo::Coordinates coordinates;
     std::set <std::string_view> buses;
 };
 
@@ -74,3 +80,5 @@ private:
     std::unordered_map <std::string_view, Bus *> busNameToBus_;
     std::unordered_map<std::pair <Stop*, Stop*>, int, DurationHasher> tableDurations_;
 };
+}
+}

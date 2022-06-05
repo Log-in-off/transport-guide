@@ -9,17 +9,14 @@ using namespace std;
 
 int main()
 {
-    //firstTest();
-    //secondTest();
-    //therdTest();
     testTask3();
     return 0;
 
-    InputReader reader;
-    TransportCatalogue catalogue;
+    TG::input::InputReader reader;
+    TG::catalogue::TransportCatalogue catalogue;
     reader.GetQueries(cin, catalogue);
 
-    StatReader statReader;
+    TG::stat::StatReader statReader;
     statReader.GetQueries(cin, cout, catalogue);
 
     return 0;
