@@ -10,9 +10,9 @@ using namespace std;
 
 namespace TG
 {
-
 namespace stat
 {
+
 void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::TransportCatalogue &catalogue)
 {
     std::deque <catalogue::Requst> busses;
@@ -59,11 +59,9 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
                 {
                     out << "Stop "<< answer.name <<": no buses" << endl;
                 }
-
             }
             else
             {
-                //Stop Samara: not found
                 out << "Stop "<< answer.name <<": not found" << endl;
             }
 
@@ -73,7 +71,6 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
             catalogue::BusInfo answer;
             if (catalogue.GetBusInfo(req, answer))
             {
-                //Bus 256: 6 stops on route, 5 unique stops, 5950 route length, 1.36124 curvature
                 out << "Bus " << answer.name << ": " << answer.countStops
                               << " stops on route, " << answer.countUnicStops
                               << " unique stops, " << answer.distance << " route length, "
@@ -86,7 +83,6 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
             }
         }
     }
-
 }
 
 }

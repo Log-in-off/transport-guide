@@ -15,9 +15,6 @@ class StatReader
 {
 public:
     void GetQueries(std::istream & iStream, std::ostream &out , catalogue::TransportCatalogue &catalogue);
-
-private:
-
 };
 
 }

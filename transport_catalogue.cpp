@@ -8,9 +8,9 @@ using namespace std;
 
 namespace TG
 {
-
 namespace catalogue
 {
+
 void TransportCatalogue::AddStop(Requst &requst)
 {
     size_t fName = requst.start.find_first_of(':');
@@ -126,7 +126,7 @@ void TransportCatalogue::AddBus(Requst & requst)
     uint32_t factDistans = 0;
     double_t geoDist = 0;
 
-    buses_.push_back({move(nameS), {}, cycle, 0, 0, 0});
+    buses_.push_back({move(nameS), {}, 0, 0, 0});
 
     Bus & addedBus = buses_.back();
     for (string_view value : stops)
@@ -166,12 +166,6 @@ void TransportCatalogue::AddBus(Requst & requst)
     addedBus.countUnicStops = uinicStops.size();
     addedBus.distance = factDistans;
     addedBus.curvature =  static_cast<double_t>(factDistans) /geoDist;
-
-    //std::cout << requst.start;
-    //std::cout <<nameS << endl;
-    //for (auto value : stops)
-    //    std::cout <<value << endl;
-    //std::cout << endl;
 }
 
 bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
@@ -196,5 +190,6 @@ bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
 
     return true;
 }
+
 }
 }

@@ -6,7 +6,6 @@ using namespace std;
 
 namespace TG
 {
-
 namespace input
 {
 
@@ -14,13 +13,12 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
 {
     std::deque <catalogue::Requst> stops;
     std::deque <catalogue::Requst> busses;
-    int count;
+    int count = 0;
     iStream >> count;
     string input;
     for (int i= 0; i <= count; i++)
     {
         getline(iStream, input);
-        //cout << input << endl;
         if (input.empty())
             continue;
         size_t head;
@@ -44,7 +42,7 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
         requsts->back().start.remove_prefix(head);
     }
 
-    for (int i = 0; i <2; i++)
+    for (int i = 0; i < 2; i++)
         for(auto &value: stops)
         {
             catalogue.AddStop(value);
