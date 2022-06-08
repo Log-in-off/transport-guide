@@ -9,6 +9,9 @@ using namespace std;
 
 int main()
 {
+    testSVG();
+    return 0;
+
     testTask3();
     return 0;
 
