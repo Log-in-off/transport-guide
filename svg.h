@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <deque>
 
 namespace svg {
 
@@ -68,13 +69,14 @@ private:
  */
 class Circle final : public Object {
 public:
+    Circle() = default;
     Circle& SetCenter(Point center);
     Circle& SetRadius(double radius);
 
 private:
     void RenderObject(const RenderContext& context) const override;
 
-    Point center_;
+    Point center_ = {0.0, 0.0};
     double radius_ = 1.0;
 };
 
@@ -82,22 +84,24 @@ private:
  * Класс Polyline моделирует элемент <polyline> для отображения ломаных линий
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline
  */
-class Polyline {
+class Polyline : public Object {
 public:
+    Polyline() = default;
     // Добавляет очередную вершину к ломаной линии
     Polyline& AddPoint(Point point);
 
-    /*
-     * Прочие методы и данные, необходимые для реализации элемента <polyline>
-     */
+private:
+    void RenderObject(const RenderContext& context) const override;
+    std::deque <Point> points_;
 };
 
 /*
  * Класс Text моделирует элемент <text> для отображения текста
  * https://developer.mozilla.org/en-US/docs/Web/SVG/Element/text
  */
-class Text {
+class Text : public Object {
 public:
+    Text() = default;
     // Задаёт координаты опорной точки (атрибуты x и y)
     Text& SetPosition(Point pos);
 
@@ -115,6 +119,15 @@ public:
 
     // Задаёт текстовое содержимое объекта (отображается внутри тега text)
     Text& SetData(std::string data);
+private:
+    void RenderObject(const RenderContext& context) const override;
+
+    Point pos_ = {0.0, 0.0};
+    Point offset_ = {0.0, 0.0};
+    uint32_t size_ = 1;
+    std::string font_family_ = "";
+    std::string font_weight_ = "";
+    std::string data_ = "";
 
     // Прочие данные и методы, необходимые для реализации элемента <text>
 };
