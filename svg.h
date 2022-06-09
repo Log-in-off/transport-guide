@@ -134,6 +134,7 @@ private:
 
 class Document {
 public:
+    Document() = default;
     /*
      Метод Add добавляет в svg-документ любой объект-наследник svg::Object.
      Пример использования:
@@ -143,12 +144,20 @@ public:
     // void Add(???);
 
     // Добавляет в svg-документ объект-наследник svg::Object
-    void AddPtr(std::unique_ptr<Object>&& obj);
+    template <typename Obj>
+    Object & Add(Obj obj) {
+        objects_.emplace_back(std::make_unique<Obj>(std::move(obj)));
+        return *objects_.back().get();
+    }
 
     // Выводит в ostream svg-представление документа
     void Render(std::ostream& out) const;
 
     // Прочие методы и данные, необходимые для реализации класса Document
+private:
+    //std::deque < Object *> objects_;
+    std::deque < std::unique_ptr<Object>> objects_;
+
 };
 
 }  // namespace svg

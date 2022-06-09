@@ -1,4 +1,5 @@
 #include "svg.h"
+#include <sstream>
 
 namespace svg {
 
@@ -52,9 +53,13 @@ void Polyline::RenderObject(const RenderContext &context) const
    //                     1150,375" />
     auto& out = context.out;
     out << "<polyline points=\"";
+    bool next = false;
     for (const auto & point: points_)
     {
-        out << point.x << "," << point.y << " ";
+        if (next)
+            out << " ";
+        next = true;
+        out << point.x << "," << point.y;
     }
     out << "\" "sv;
     out << "/>"sv;
@@ -77,7 +82,7 @@ void Text::RenderObject(const RenderContext &context) const
         out << " font-family=\"" << font_family_ << "\"";
     if (!font_weight_.empty())
         out << " font-weight=\"" << font_weight_ << "\"";
-    out << ">" << data_<< " </text>";
+    out << ">" << data_<< "</text>";
 }
 
 Text &Text::SetPosition(Point pos)
@@ -114,6 +119,24 @@ Text &Text::SetData(std::string data)
 {
     data_ = data;
     return *this;
+}
+
+void Document::Render(std::ostream &out) const
+{
+    out << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"sv;
+    out << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">"sv;
+
+    for (const auto & obj : objects_)
+    {
+        std::stringstream buf;
+        RenderContext render(buf);
+        obj.get()->Render(render);
+        std::cout << buf.str() << std::endl;
+    }
+
+    out << "</svg>"sv;
+
+
 }
 
 
