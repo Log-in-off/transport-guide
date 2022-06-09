@@ -129,35 +129,38 @@ private:
     std::string font_weight_ = "";
     std::string data_ = "";
 
-    // Прочие данные и методы, необходимые для реализации элемента <text>
 };
 
 class Document {
 public:
     Document() = default;
-    /*
-     Метод Add добавляет в svg-документ любой объект-наследник svg::Object.
-     Пример использования:
-     Document doc;
-     doc.Add(Circle().SetCenter({20, 30}).SetRadius(15));
-    */
-    // void Add(???);
 
     // Добавляет в svg-документ объект-наследник svg::Object
     template <typename Obj>
-    Object & Add(Obj obj) {
-        objects_.emplace_back(std::make_unique<Obj>(std::move(obj)));
-        return *objects_.back().get();
-    }
+    Object & Add(Obj obj);
+
+    template <typename Obj>
+    Object & AddPtr(std::unique_ptr<Obj> ptr);
 
     // Выводит в ostream svg-представление документа
     void Render(std::ostream& out) const;
 
-    // Прочие методы и данные, необходимые для реализации класса Document
 private:
     //std::deque < Object *> objects_;
     std::deque < std::unique_ptr<Object>> objects_;
 
 };
+template <typename Obj>
+Object & Document::Add(Obj obj) {
+    objects_.emplace_back(std::make_unique<Obj>(std::move(obj)));
+    return *objects_.back().get();
+}
+
+template <typename Obj>
+Object & Document::AddPtr(std::unique_ptr<Obj> ptr)
+{
+    objects_.emplace_back(std::move(ptr));
+    return *objects_.back().get();
+}
 
 }  // namespace svg

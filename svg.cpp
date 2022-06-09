@@ -1,5 +1,6 @@
 #include "svg.h"
 #include <sstream>
+#include <string_view>
 
 namespace svg {
 
@@ -31,7 +32,7 @@ void Circle::RenderObject(const RenderContext& context) const {
     //        fill="red" stroke="blue" stroke-width="10"  />
     auto& out = context.out;
     out << "<circle cx=\""sv << center_.x << "\" cy=\""sv << center_.y << "\" "sv;
-    out << "r=\""sv << radius_ << "\" "sv;
+    out << "r=\""sv << radius_ << "\""sv;
     out << "/>"sv;
 }
 
@@ -52,16 +53,16 @@ void Polyline::RenderObject(const RenderContext &context) const
    //                     950,375 950,25 1050,25 1050,375
    //                     1150,375" />
     auto& out = context.out;
-    out << "<polyline points=\"";
+    out << "<polyline points=\""sv;
     bool next = false;
     for (const auto & point: points_)
     {
         if (next)
-            out << " ";
+            out << " "sv;
         next = true;
-        out << point.x << "," << point.y;
+        out << point.x << ","sv << point.y;
     }
-    out << "\" "sv;
+    out << "\""sv;
     out << "/>"sv;
 }
 
@@ -71,18 +72,16 @@ void Text::RenderObject(const RenderContext &context) const
     //        font-family="Verdana" font-size="64" fill="blue" >
     //    Hello, out there!
     //  </text>
-    if (data_.empty())
-        return;
 
     auto& out = context.out;
-    out << "<text x=\""sv << pos_.x << "\" y=\"" << pos_.y << "\"";
-    out << " dx=\""sv << offset_.x << "\" dy=\"" << offset_.y << "\"";
-    out << " font-size=\"" << size_ << "\"";
+    out << "<text x=\""sv << pos_.x << "\" y=\""sv << pos_.y << "\""sv;
+    out << " dx=\""sv << offset_.x << "\" dy=\""sv << offset_.y << "\""sv;
+    out << " font-size=\""sv << size_ << "\""sv;
     if (!font_family_.empty())
-        out << " font-family=\"" << font_family_ << "\"";
+        out << " font-family=\""sv << font_family_ << "\""sv;
     if (!font_weight_.empty())
-        out << " font-weight=\"" << font_weight_ << "\"";
-    out << ">" << data_<< "</text>";
+        out << " font-weight=\""sv << font_weight_ << "\""sv;
+    out << ">"sv << data_<< "</text>"sv;
 }
 
 Text &Text::SetPosition(Point pos)
@@ -131,14 +130,64 @@ void Document::Render(std::ostream &out) const
         std::stringstream buf;
         RenderContext render(buf);
         obj.get()->Render(render);
-        std::cout << buf.str() << std::endl;
+        std::string start = buf.str();
+        const std::string headText = "<text ";
+        const std::string endText = "</text>";
+        size_t findHead = start.find(headText);
+        if (findHead == std::string::npos)
+            out << start;
+        else
+        {
+            size_t findEnd = start.find(endText);
+            size_t newFind = start.find_first_of('>', findHead);
+            out <<  start.substr(0, newFind+1);
+            const std::string service_symbols = "\"\'><&";
+            size_t lastFind  = newFind + 1;
+            while (true) {
+                newFind = start.find_first_of(service_symbols, newFind + 1);
+                if (newFind == findEnd)
+                {
+                    // надо вывести в поток остаток
+                    out << start.substr(lastFind, start.size()-lastFind-1);
+                    break;
+                }
+
+                out << start.substr(lastFind, newFind-lastFind);
+                switch (start.at(newFind))
+                {
+                    case '\"':
+                    {
+                        out << "&quot;"sv;
+                        break;
+                    }
+                    case '\'':
+                    {
+                        out << "&apos;"sv;
+                        break;
+                    }
+                    case '<':
+                    {
+                        out << "&lt;"sv;
+                        break;
+                    }
+                    case '>':
+                    {
+                        out << "&gt;"sv;
+                        break;
+                    }
+                    case '&':
+                    {
+                        out << "&amp;"sv;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                lastFind  = newFind + 1;
+            }
+        }
     }
-
     out << "</svg>"sv;
-
-
 }
-
-
 
 }  // namespace svg

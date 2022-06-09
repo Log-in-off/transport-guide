@@ -174,6 +174,19 @@ void DrawPicture() {
     doc.Render(std::cout);
 }
 
+void TestText()
+{
+    Document doc;
+    doc.Add(Text()
+                .SetFontFamily("Verdana"s)
+                .SetPosition({35, 20})
+                .SetOffset({0, 6})
+                .SetFontSize(12)
+                .SetData("Hello, <UserName>. Would you like some \"M&M\'s\"?"s));
+
+    doc.Render(std::cout);
+}
+
 
 
 void testSVG(void)
@@ -243,6 +256,7 @@ void DrawPicture() {
     //std::cout << "</svg>"sv;
 
     DrawPicture();
+    TestText();
 
 
 }
