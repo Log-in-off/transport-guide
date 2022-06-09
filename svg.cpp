@@ -81,7 +81,53 @@ void Text::RenderObject(const RenderContext &context) const
         out << " font-family=\""sv << font_family_ << "\""sv;
     if (!font_weight_.empty())
         out << " font-weight=\""sv << font_weight_ << "\""sv;
-    out << ">"sv << data_<< "</text>"sv;
+
+    out << ">"sv;
+    size_t newFind = 0;
+    const std::string service_symbols = "\"\'><&";
+    size_t lastFind  = newFind;
+    while (true) {
+        newFind = data_.find_first_of(service_symbols, newFind + 1);
+        if (newFind == std::string::npos)
+        {
+            out << data_.substr(lastFind, data_.size()-lastFind);
+            break;
+        }
+
+        out << data_.substr(lastFind, newFind-lastFind);
+        switch (data_.at(newFind))
+        {
+            case '\"':
+            {
+                out << "&quot;"sv;
+                break;
+            }
+            case '\'':
+            {
+                out << "&apos;"sv;
+                break;
+            }
+            case '<':
+            {
+                out << "&lt;"sv;
+                break;
+            }
+            case '>':
+            {
+                out << "&gt;"sv;
+                break;
+            }
+            case '&':
+            {
+                out << "&amp;"sv;
+                break;
+            }
+            default:
+                break;
+        }
+        lastFind  = newFind + 1;
+    }
+    out << "</text>"sv;
 }
 
 Text &Text::SetPosition(Point pos)
@@ -122,70 +168,21 @@ Text &Text::SetData(std::string data)
 
 void Document::Render(std::ostream &out) const
 {
-    out << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"sv;
-    out << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">"sv;
+    //out << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"sv;
+    //out << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">"sv;
+    //RenderContext render(out);
 
-    for (const auto & obj : objects_)
-    {
-        std::stringstream buf;
-        RenderContext render(buf);
-        obj.get()->Render(render);
-        std::string start = buf.str();
-        const std::string headText = "<text ";
-        const std::string endText = "</text>";
-        size_t findHead = start.find(headText);
-        if (findHead == std::string::npos)
-            out << start;
-        else
-        {
-            size_t findEnd = start.find(endText);
-            size_t newFind = start.find_first_of('>', findHead);
-            out <<  start.substr(0, newFind+1);
-            const std::string service_symbols = "\"\'><&";
-            size_t lastFind  = newFind + 1;
-            while (true) {
-                newFind = start.find_first_of(service_symbols, newFind + 1);
-                if (newFind == findEnd)
-                {
-                    // надо вывести в поток остаток
-                    out << start.substr(lastFind, start.size()-lastFind-1);
-                    break;
-                }
+    //for (const auto & obj : objects_)
+    //{
+    //    obj.get()->Render(render);
+    //}
+    //out << "</svg>"sv;
+    out << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"sv << std::endl;
+    out << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">"sv << std::endl;
+    RenderContext ctx(out, 2, 2);
 
-                out << start.substr(lastFind, newFind-lastFind);
-                switch (start.at(newFind))
-                {
-                    case '\"':
-                    {
-                        out << "&quot;"sv;
-                        break;
-                    }
-                    case '\'':
-                    {
-                        out << "&apos;"sv;
-                        break;
-                    }
-                    case '<':
-                    {
-                        out << "&lt;"sv;
-                        break;
-                    }
-                    case '>':
-                    {
-                        out << "&gt;"sv;
-                        break;
-                    }
-                    case '&':
-                    {
-                        out << "&amp;"sv;
-                        break;
-                    }
-                    default:
-                        break;
-                }
-                lastFind  = newFind + 1;
-            }
-        }
+    for (auto &str : objects_) {
+        str->Render(ctx);
     }
     out << "</svg>"sv;
 }

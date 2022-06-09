@@ -133,34 +133,32 @@ private:
 
 class Document {
 public:
-    Document() = default;
 
     // Добавляет в svg-документ объект-наследник svg::Object
     template <typename Obj>
-    Object & Add(Obj obj);
+    void Add(Obj obj);
 
     template <typename Obj>
-    Object & AddPtr(std::unique_ptr<Obj> ptr);
+    void AddPtr(std::unique_ptr<Obj> &&ptr);
 
     // Выводит в ostream svg-представление документа
     void Render(std::ostream& out) const;
 
 private:
-    //std::deque < Object *> objects_;
     std::deque < std::unique_ptr<Object>> objects_;
 
 };
+
 template <typename Obj>
-Object & Document::Add(Obj obj) {
-    objects_.emplace_back(std::make_unique<Obj>(std::move(obj)));
-    return *objects_.back().get();
+void Document::Add(Obj obj) {
+    AddPtr(std::make_unique<Obj>(std::move(obj)));
+    //objects_.emplace_back(std::make_unique<Obj>(std::move(obj)));
 }
 
 template <typename Obj>
-Object & Document::AddPtr(std::unique_ptr<Obj> ptr)
+void Document::AddPtr(std::unique_ptr<Obj> &&ptr)
 {
     objects_.emplace_back(std::move(ptr));
-    return *objects_.back().get();
 }
 
 }  // namespace svg

@@ -256,7 +256,7 @@ void DrawPicture() {
     //std::cout << "</svg>"sv;
 
     DrawPicture();
-    TestText();
+    //TestText();
 
 
 }
