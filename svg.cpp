@@ -6,6 +6,48 @@ namespace svg {
 
 using namespace std::literals;
 
+std::ostream &operator<<(std::ostream &out, const StrokeLineCap &obj)
+{
+    switch (obj) {
+    case StrokeLineCap::BUTT:
+        out << "butt"sv;
+        break;
+    case StrokeLineCap::ROUND:
+        out << "round"sv;
+        break;
+    case StrokeLineCap::SQUARE:
+        out << "square"sv;
+        break;
+    default:
+        break;
+    }
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const StrokeLineJoin &obj)
+{
+    switch (obj) {
+    case StrokeLineJoin::ARCS:
+        out << "arcs"sv;
+        break;
+    case StrokeLineJoin::BEVEL:
+        out << "bevel"sv;
+        break;
+    case StrokeLineJoin::MITER:
+        out << "miter"sv;
+        break;
+    case StrokeLineJoin::MITER_CLIP:
+        out << "miter-clip"sv;
+        break;
+    case StrokeLineJoin::ROUND:
+        out << "round"sv;
+        break;
+    default:
+        break;
+    }
+    return out;
+}
+
 void Object::Render(const RenderContext& context) const {
     context.RenderIndent();
 
@@ -33,6 +75,7 @@ void Circle::RenderObject(const RenderContext& context) const {
     auto& out = context.out;
     out << "<circle cx=\""sv << center_.x << "\" cy=\""sv << center_.y << "\" "sv;
     out << "r=\""sv << radius_ << "\""sv;
+    RenderAttrs(context.out);
     out << "/>"sv;
 }
 
@@ -63,6 +106,7 @@ void Polyline::RenderObject(const RenderContext &context) const
         out << point.x << ","sv << point.y;
     }
     out << "\""sv;
+    RenderAttrs(context.out);
     out << "/>"sv;
 }
 
@@ -74,7 +118,10 @@ void Text::RenderObject(const RenderContext &context) const
     //  </text>
 
     auto& out = context.out;
-    out << "<text x=\""sv << pos_.x << "\" y=\""sv << pos_.y << "\""sv;
+    out << "<text "sv;
+    RenderAttrs(context.out);
+
+    out << " x=\""sv << pos_.x << "\" y=\""sv << pos_.y << "\""sv;
     out << " dx=\""sv << offset_.x << "\" dy=\""sv << offset_.y << "\""sv;
     out << " font-size=\""sv << size_ << "\""sv;
     if (!font_family_.empty())
@@ -191,5 +238,7 @@ void Document::Render(std::ostream &out) const
     }
     out << "</svg>"sv;
 }
+
+
 
 }  // namespace svg

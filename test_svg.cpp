@@ -89,7 +89,7 @@ public:
         , num_rays_(num_rays) {}
 
     void Draw(svg::ObjectContainer& container) const override {
-        container.Add(::CreateStar(center_, outer_radius_, inner_radius_, num_rays_));
+        container.Add(::CreateStar(center_, outer_radius_, inner_radius_, num_rays_).SetFillColor("red").SetStrokeColor("black"));
     }
 
 private:
@@ -107,9 +107,9 @@ public:
     void Draw(svg::ObjectContainer& container) const override {
         const svg::Point foot_center = {head_center_.x, head_center_.y + 5 * head_radius_};
         const svg::Point midle_center = {head_center_.x, head_center_.y + 2 * head_radius_};
-        container.Add(svg::Circle().SetCenter(foot_center).SetRadius(2*head_radius_));
-        container.Add(svg::Circle().SetCenter(midle_center).SetRadius(1.5*head_radius_));
-        container.Add(svg::Circle().SetCenter(head_center_).SetRadius(head_radius_));
+        container.Add(svg::Circle().SetCenter(foot_center).SetRadius(2*head_radius_).SetFillColor("rgb(240,240,240)").SetStrokeColor("black"));
+        container.Add(svg::Circle().SetCenter(midle_center).SetRadius(1.5*head_radius_).SetFillColor("rgb(240,240,240)").SetStrokeColor("black"));
+        container.Add(svg::Circle().SetCenter(head_center_).SetRadius(head_radius_).SetFillColor("rgb(240,240,240)").SetStrokeColor("black"));
     }
 private:
     svg::Point head_center_;
