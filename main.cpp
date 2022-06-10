@@ -10,7 +10,8 @@ using namespace std;
 
 int main()
 {
-    testSVG();
+    //testSVG();
+    testPicture();
     return 0;
 
     testTask3();
