@@ -8,6 +8,7 @@ SOURCES += \
         main.cpp \
         stat_reader.cpp \
         svg.cpp \
+        test_svg.cpp \
         tests.cpp \
         transport_catalogue.cpp
 
@@ -16,6 +17,7 @@ HEADERS += \
     input_reader.h \
     stat_reader.h \
     svg.h \
+    test_svg.h \
     tests.h \
     transport_catalogue.h
 

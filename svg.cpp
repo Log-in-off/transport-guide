@@ -166,6 +166,11 @@ Text &Text::SetData(std::string data)
     return *this;
 }
 
+void Document::AddPtr(std::unique_ptr<Object> &&ptr)
+{
+    objects_.emplace_back(std::move(ptr));
+}
+
 void Document::Render(std::ostream &out) const
 {
     //out << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"sv;

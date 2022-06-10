@@ -6,6 +6,7 @@ using namespace std;
 #include "input_reader.h"
 #include "stat_reader.h"
 #include "tests.h"
+#include "test_svg.h"
 
 int main()
 {

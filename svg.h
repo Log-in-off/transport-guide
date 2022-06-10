@@ -131,15 +131,28 @@ private:
 
 };
 
-class Document {
+class ObjectContainer {
 public:
-
-    // Добавляет в svg-документ объект-наследник svg::Object
+    virtual ~ObjectContainer(){}
     template <typename Obj>
     void Add(Obj obj);
 
-    template <typename Obj>
-    void AddPtr(std::unique_ptr<Obj> &&ptr);
+    virtual void AddPtr(std::unique_ptr<Object> &&ptr) = 0;
+    // Прочие методы рисования графических примитивов
+    // ...
+};
+
+template <typename Obj>
+void ObjectContainer::Add(Obj obj) {
+    AddPtr(std::make_unique<Obj>(std::move(obj)));
+}
+
+
+class Document : public ObjectContainer{
+public:
+
+    // Добавляет в svg-документ объект-наследник svg::Object
+    void AddPtr(std::unique_ptr<Object> &&ptr);
 
     // Выводит в ostream svg-представление документа
     void Render(std::ostream& out) const;
@@ -149,16 +162,12 @@ private:
 
 };
 
-template <typename Obj>
-void Document::Add(Obj obj) {
-    AddPtr(std::make_unique<Obj>(std::move(obj)));
-    //objects_.emplace_back(std::make_unique<Obj>(std::move(obj)));
-}
+class Drawable {
+public:
+    virtual void Draw(ObjectContainer& g) const = 0;
+    virtual ~Drawable() {}
+};
 
-template <typename Obj>
-void Document::AddPtr(std::unique_ptr<Obj> &&ptr)
-{
-    objects_.emplace_back(std::move(ptr));
-}
+
 
 }  // namespace svg
