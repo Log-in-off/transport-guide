@@ -6,6 +6,37 @@ namespace svg {
 
 using namespace std::literals;
 
+Rgb::Rgb(uint8_t redI, uint8_t greenI, uint8_t blueI):red(redI), green(greenI), blue(blueI){}
+Rgb::Rgb():red(0), green(0), blue(0){}
+
+Rgba::Rgba(uint8_t redI, uint8_t greenI, uint8_t blueI, double opacityI):red(redI), green(greenI), blue(blueI), opacity(opacityI){}
+Rgba::Rgba():red(0), green(0), blue(0), opacity(1.0){}
+
+std::ostream & operator<< (std::ostream &out, const Rgb & color)
+{
+    out << "rgb("s << static_cast<int>(color.red) << ","s << static_cast<int>(color.green) << ","s << static_cast<int>(color.blue) << ")"s;
+    return out;
+}
+
+std::ostream & operator<< (std::ostream &out, const Rgba & color)
+{
+    out << "rgba("s << static_cast<int>(color.red) << ","s << static_cast<int>(color.green) << ","s << static_cast<int>(color.blue) << ","s<< color.opacity << ")"s;
+    return out;
+}
+
+std::ostream & operator<< (std::ostream &out, const std::monostate & )
+{
+    out << NoneColor;
+    return out;
+}
+
+
+std::ostream & operator<< (std::ostream &out, const  Color &color)
+{
+    std::visit( [&out](auto value) {out << value;}, color);
+    return out;
+}
+
 std::ostream &operator<<(std::ostream &out, const StrokeLineCap &obj)
 {
     switch (obj) {

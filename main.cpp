@@ -11,7 +11,8 @@ using namespace std;
 int main()
 {
     //testSVG();
-    testPicture();
+    //testPicture();
+    TestColor();
     return 0;
 
     testTask3();

@@ -6,11 +6,38 @@
 #include <string>
 #include <deque>
 #include <optional>
+#include <variant>
 
 namespace svg {
 
-using Color = std::string;
+
+struct Rgb {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    Rgb(uint8_t redI, uint8_t greenI, uint8_t blueI);
+    Rgb();
+};
+
+std::ostream & operator<< (std::ostream &out, const Rgb & color);
+
+struct Rgba {
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    double opacity;
+    Rgba(uint8_t redI, uint8_t greenI, uint8_t blueI, double opacityI);
+    Rgba();
+
+};
+std::ostream & operator<< (std::ostream &out, const Rgba & color);
+
+std::ostream & operator<< (std::ostream &out, const std::monostate & color);
+
+using Color = std::variant<std::monostate, std::string, Rgb, Rgba>;
 inline const Color NoneColor{"none"};
+
+std::ostream & operator<< (std::ostream &out, const Color &color);
 
 enum class StrokeLineCap {
     BUTT,
@@ -65,18 +92,17 @@ protected:
     void RenderAttrs(std::ostream& out) const {
         using namespace std::literals;
 
-        if (fillColor_) {
-            out << " fill=\""sv << *fillColor_ << "\""sv;
+        if (!std::holds_alternative<std::monostate>(fillColor_)) {
+            out << " fill=\""sv << fillColor_ << "\""sv;
         }
-        if (strokeColor_) {
-            out << " stroke=\""sv << *strokeColor_ << "\""sv;
+        if (!std::holds_alternative<std::monostate>(strokeColor_)) {
+            out << " stroke=\""sv << strokeColor_ << "\""sv;
         }
         if (width_) {
             out << " stroke-width=\""sv << *width_ << "\""sv;
         }
         if (line_cap_)
         {
-
             out << " stroke-linecap=\""sv << *line_cap_ << "\""sv;
         }
         if (line_join_)
@@ -90,8 +116,8 @@ private:
             // если класс Owner — наследник PathProps
             return static_cast<Owner&>(*this);
         }
-    std::optional<Color> fillColor_ ;
-    std::optional<Color> strokeColor_;
+    Color fillColor_ ;
+    Color strokeColor_;
     std::optional<double> width_;
     std::optional<StrokeLineCap> line_cap_;
     std::optional<StrokeLineJoin> line_join_;
