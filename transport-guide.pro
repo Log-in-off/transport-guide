@@ -5,9 +5,11 @@ CONFIG -= qt
 
 SOURCES += \
         input_reader.cpp \
+        json.cpp \
         main.cpp \
         stat_reader.cpp \
         svg.cpp \
+        test_json.cpp \
         test_svg.cpp \
         tests.cpp \
         transport_catalogue.cpp
@@ -15,8 +17,10 @@ SOURCES += \
 HEADERS += \
     geo.h \
     input_reader.h \
+    json.h \
     stat_reader.h \
     svg.h \
+    test_json.h \
     test_svg.h \
     tests.h \
     transport_catalogue.h

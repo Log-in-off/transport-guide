@@ -7,15 +7,11 @@ using namespace std;
 #include "stat_reader.h"
 #include "tests.h"
 #include "test_svg.h"
+#include "test_json.h"
 
 int main()
 {
-    //testSVG();
-    //testPicture();
-    TestColor();
-    return 0;
-
-    testTask3();
+    testJSON();
     return 0;
 
     TG::input::InputReader reader;
