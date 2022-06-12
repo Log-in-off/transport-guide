@@ -11,12 +11,16 @@ Node LoadNode(istream& input);
 Node LoadArray(istream& input) {
     Array result;
 
-    for (char c; input >> c && c != ']';) {
+    char c = 0;
+    for (; input >> c && c != ']';) {
         if (c != ',') {
             input.putback(c);
         }
         result.push_back(LoadNode(input));
     }
+    if (c != ']')
+        throw ParsingError("Failed to read number from stream"s);
+
 
     return Node(move(result));
 }
@@ -182,7 +186,8 @@ Node LoadString(std::istream& input) {
 Node LoadDict(istream& input) {
     Dict result;
 
-    for (char c; input >> c && c != '}';) {
+    char c = 0;
+    for (; input >> c && c != '}';) {
         if (c == ',') {
             input >> c;
         }
@@ -191,6 +196,9 @@ Node LoadDict(istream& input) {
         input >> c;
         result.insert({move(key), LoadNode(input)});
     }
+
+    if (c != '}')
+        throw ParsingError("Failed to read number from stream"s);
 
     return Node(move(result));
 }
