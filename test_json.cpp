@@ -16,7 +16,7 @@ namespace {
 // Можете воспользоваться ими, чтобы протестировать свой код.
 // Раскомментируйте их по мере работы.
 
-/*
+
 json::Document LoadJSON(const std::string& s) {
     std::istringstream strm(s);
     return json::Load(strm);
@@ -73,7 +73,6 @@ void TestNull() {
 
     Node null_node1{nullptr};
     assert(null_node1.IsNull());
-
     assert(Print(null_node) == "null"s);
     assert(null_node == null_node1);
     assert(!(null_node != null_node1));
@@ -83,10 +82,28 @@ void TestNull() {
     assert(node == null_node);
     // Пробелы, табуляции и символы перевода строки между токенами JSON файла игнорируются
     assert(LoadJSON(" \t\r\n\n\r null \t\r\n\n\r "s).GetRoot() == null_node);
+    std::cout << "Null test" << std::endl;
 }
 
-*/
-/*
+void TestBool() {
+    Node true_node{true};
+    assert(true_node.IsBool());
+    assert(true_node.AsBool());
+
+    Node false_node{false};
+    assert(false_node.IsBool());
+    assert(!false_node.AsBool());
+
+    assert(Print(true_node) == "true"s);
+    assert(Print(false_node) == "false"s);
+
+    assert(LoadJSON("true"s).GetRoot() == true_node);
+    assert(LoadJSON("false"s).GetRoot() == false_node);
+    assert(LoadJSON(" \t\r\n\n\r true \r\n"s).GetRoot() == true_node);
+    assert(LoadJSON(" \t\r\n\n\r false \t\r\n\n\r "s).GetRoot() == false_node);
+    std::cout << "Bool test" << std::endl;
+}
+
 void TestNumbers() {
     const Node int_node{42};
     assert(int_node.IsInt());
@@ -122,6 +139,7 @@ void TestNumbers() {
     assert(LoadJSON("0.0").GetRoot() == Node{0.0});
     // Пробелы, табуляции и символы перевода строки между токенами JSON файла игнорируются
     assert(LoadJSON(" \t\r\n\n\r 0.0 \t\r\n\n\r ").GetRoot() == Node{0.0});
+    std::cout << "Null Number" << std::endl;
 }
 
 void TestStrings() {
@@ -131,10 +149,9 @@ void TestStrings() {
 
     assert(!str_node.IsInt());
     assert(!str_node.IsDouble());
-
     assert(Print(str_node) == "\"Hello, \\\"everybody\\\"\""s);
-
     assert(LoadJSON(Print(str_node)).GetRoot() == str_node);
+
     const std::string escape_chars
         = R"("\r\n\t\"\\")"s;  // При чтении строкового литерала последовательности \r,\n,\t,\\,\"
     // преобразовываться в соответствующие символы.
@@ -142,27 +159,12 @@ void TestStrings() {
     assert(Print(LoadJSON(escape_chars).GetRoot()) == "\"\\r\\n\t\\\"\\\\\""s);
     // Пробелы, табуляции и символы перевода строки между токенами JSON файла игнорируются
     assert(LoadJSON("\t\r\n\n\r \"Hello\" \t\r\n\n\r ").GetRoot() == Node{"Hello"s});
+    std::cout << "String test" << std::endl;
 }
 
-void TestBool() {
-    Node true_node{true};
-    assert(true_node.IsBool());
-    assert(true_node.AsBool());
-
-    Node false_node{false};
-    assert(false_node.IsBool());
-    assert(!false_node.AsBool());
-
-    assert(Print(true_node) == "true"s);
-    assert(Print(false_node) == "false"s);
-
-    assert(LoadJSON("true"s).GetRoot() == true_node);
-    assert(LoadJSON("false"s).GetRoot() == false_node);
-    assert(LoadJSON(" \t\r\n\n\r true \r\n"s).GetRoot() == true_node);
-    assert(LoadJSON(" \t\r\n\n\r false \t\r\n\n\r "s).GetRoot() == false_node);
-}
-
+/*
 void TestArray() {
+
     Node arr_node{Array{1, 1.23, "Hello"s}};
     assert(arr_node.IsArray());
     const Array& arr = arr_node.AsArray();
@@ -261,11 +263,11 @@ void Benchmark() {
 
 void testJSON()
 {
-    //TestNull();
+    TestNull();
+    TestBool();
+    TestNumbers();
+    TestStrings();
     /*
-        TestNumbers();
-        TestStrings();
-        TestBool();
         TestArray();
         TestMap();
         TestErrorHandling();
