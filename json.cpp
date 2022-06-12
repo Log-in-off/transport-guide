@@ -223,8 +223,39 @@ Node::Node() {
     //node_ = std::nullptr_t;
 }
 
-Node::Node(Value value)
-    : node_(move(value)) {}
+Node::Node(std::nullptr_t value) {
+    node_ = value;
+}
+
+Node::Node(bool value) {
+    node_ = value;
+}
+
+Node::Node(int value) {
+    node_ = value;
+}
+
+Node::Node(double value) {
+    node_ = value;
+}
+
+Node::Node(const std::string &value) {
+    node_ = move(value);
+}
+
+Node::Node(const Array &value) {
+    node_ = move(value);
+}
+
+Node::Node(const Dict &value) {
+    node_ = move(value);
+}
+
+
+
+const Node::Value& Node::GetValue() const {
+    return node_;
+}
 
 bool Node::AsBool() const {
     if (!IsBool())
@@ -308,6 +339,14 @@ const Node& Document::GetRoot() const {
     return root_;
 }
 
+bool operator==(const Document &lh, const Document &rh) {
+    return lh.GetRoot() == rh.GetRoot();
+}
+bool operator!=(const Document &lh, const Document &rh)
+{
+    return !(lh == rh);
+}
+
 Document Load(istream& input) {
     return Document{LoadNode(input)};
 }
@@ -332,12 +371,12 @@ void PrintNode(const Node& node, std::ostream& out) {
     node.GetValue());
 }
 
-ostream &operator<<(std::ostream &out, const Array &array)
+ostream &operator<<(std::ostream &out, const Array &)
 {
     return out;
 }
 
-ostream &operator<<(std::ostream &out, const Dict &dict)
+ostream &operator<<(std::ostream &out, const Dict &)
 {
     return out;
 }

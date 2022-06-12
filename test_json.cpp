@@ -162,9 +162,10 @@ void TestStrings() {
     std::cout << "String test" << std::endl;
 }
 
-/*
+
 void TestArray() {
 
+    Array tmp = {1, 1.23, "Hello"s};
     Node arr_node{Array{1, 1.23, "Hello"s}};
     assert(arr_node.IsArray());
     const Array& arr = arr_node.AsArray();
@@ -196,7 +197,7 @@ void TestMap() {
             .GetRoot()
         == dict_node);
 }
-
+/*
 void TestErrorHandling() {
     MustFailToLoad("["s);
     MustFailToLoad("]"s);

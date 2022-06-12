@@ -30,8 +30,14 @@ public:
    /* Реализуйте Node, используя std::variant */
 
     Node();
-    explicit Node(Value value);
-    const Value& GetValue() const { return node_; }
+    Node(std::nullptr_t value);
+    Node(bool value);
+    Node(int value);
+    Node(double value);
+    Node(const std::string &value);
+    Node(const Dict &value);
+    Node(const Array &value);
+    const Value& GetValue() const;
 
     bool AsBool() const;
     int AsInt() const;
@@ -65,6 +71,9 @@ public:
 private:
     Node root_;
 };
+
+bool operator==(const Document &lh, const Document &rh);
+bool operator!=(const Document &lh, const Document &rh);
 
 Document Load(std::istream& input);
 
