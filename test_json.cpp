@@ -164,7 +164,6 @@ void TestStrings() {
 
 
 void TestArray() {
-
     Array tmp = {1, 1.23, "Hello"s};
     Node arr_node{Array{1, 1.23, "Hello"s}};
     assert(arr_node.IsArray());
@@ -178,6 +177,7 @@ void TestArray() {
     // Пробелы, табуляции и символы перевода строки между токенами JSON файла игнорируются
     assert(LoadJSON("[ 1 \r \n ,  \r\n\t 1.23, \n \n  \t\t  \"Hello\" \t \n  ] \n  "s).GetRoot()
            == arr_node);
+    std::cout << "Array test" << std::endl;
 }
 
 void TestMap() {
@@ -188,6 +188,8 @@ void TestMap() {
     assert(dict.at("key1"s).AsString() == "value1"s);
     assert(dict.at("key2"s).AsInt() == 42);
 
+    std::string tmp = Print(dict_node);
+
     assert(LoadJSON("{ \"key1\": \"value1\", \"key2\": 42 }"s).GetRoot() == dict_node);
     assert(LoadJSON(Print(dict_node)).GetRoot() == dict_node);
     // Пробелы, табуляции и символы перевода строки между токенами JSON файла игнорируются
@@ -196,8 +198,9 @@ void TestMap() {
             "\t\r\n\n\r { \t\r\n\n\r \"key1\" \t\r\n\n\r: \t\r\n\n\r \"value1\" \t\r\n\n\r , \t\r\n\n\r \"key2\" \t\r\n\n\r : \t\r\n\n\r 42 \t\r\n\n\r } \t\r\n\n\r"s)
             .GetRoot()
         == dict_node);
+    std::cout << "Dict test" << std::endl;
 }
-/*
+
 void TestErrorHandling() {
     MustFailToLoad("["s);
     MustFailToLoad("]"s);
@@ -232,6 +235,8 @@ void TestErrorHandling() {
     MustThrowLogicError([&array_node] {
         array_node.AsBool();
     });
+
+    std::cout << "ErrorHandling test" << std::endl;
 }
 
 void Benchmark() {
@@ -257,7 +262,6 @@ void Benchmark() {
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() << "ms"sv
               << std::endl;
 }
-*/
 
 }  // namespace
 
@@ -268,11 +272,8 @@ void testJSON()
     TestBool();
     TestNumbers();
     TestStrings();
-    /*
-        TestArray();
-        TestMap();
-        TestErrorHandling();
-        Benchmark();
-    */
-
+    TestArray();
+    TestMap();
+    TestErrorHandling();
+    Benchmark();
 }

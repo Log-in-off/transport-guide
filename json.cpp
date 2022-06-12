@@ -371,13 +371,35 @@ void PrintNode(const Node& node, std::ostream& out) {
     node.GetValue());
 }
 
-ostream &operator<<(std::ostream &out, const Array &)
+ostream &operator<<(std::ostream &out, const Array &array)
 {
+    bool next = false;
+    out << "[";
+    for (const auto & value:array )
+    {
+        if (next)
+            out << ',';
+        next = true;
+        PrintNode(value, out);
+    }
+    out << "]";
     return out;
 }
 
-ostream &operator<<(std::ostream &out, const Dict &)
+ostream &operator<<(std::ostream &out, const Dict &dict)
 {
+    bool next = false;
+    out << "{ ";
+    for (const auto & value:dict )
+    {
+        if (next)
+            out << ", ";
+        next = true;
+        out << '\"';
+        out << value.first << "\": ";
+        PrintNode(value.second, out);
+    }
+    out << " }";
     return out;
 }
 
