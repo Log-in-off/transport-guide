@@ -11,9 +11,9 @@ using namespace std;
 
 int main()
 {
-    testMain();
-    return 0;
     testTaskJsonN();
+    return 0;
+    testMain();
     testTaskJson();
     testJSON();
 

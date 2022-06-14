@@ -100,7 +100,7 @@ void TestAddRouteBeforeStops()
 #include <fstream>
 #include <sstream>
 
-
+#include "tests.h"
 #include "input_reader.h"
 #include "stat_reader.h"
 
@@ -157,7 +157,7 @@ void testTaskJson(void)
 void testTaskJsonN(void)
 {
     using namespace std;
-    ifstream ifs("test1.txt");
+    ifstream ifs("test3.txt");
     if( ifs.is_open())
     {
 
@@ -169,7 +169,7 @@ void testTaskJsonN(void)
 
 }
 
-void testMain()
+void testMain(void)
 {
     using namespace std;
     TG::catalogue::TransportCatalogue catalogue;
