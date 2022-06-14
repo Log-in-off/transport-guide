@@ -152,10 +152,28 @@ void testTaskJson(void)
         TG::RH::RequestHandler handler(catalogue);
         reader.GetQueries(ifs, cout, handler);
     }
-    //std::cin.rdbuf(ifs.rdbuf());
-    //
-    //string input;
-    //cin >> input;
-    //cout << input;
 
+}
+void testTaskJsonN(void)
+{
+    using namespace std;
+    ifstream ifs("test1.txt");
+    if( ifs.is_open())
+    {
+
+        TG::catalogue::TransportCatalogue catalogue;
+        TG::ReaderJSON reader;
+        TG::RH::RequestHandler handler(catalogue);
+        reader.GetQueries(ifs, cout, handler);
+    }
+
+}
+
+void testMain()
+{
+    using namespace std;
+    TG::catalogue::TransportCatalogue catalogue;
+    TG::ReaderJSON reader;
+    TG::RH::RequestHandler handler(catalogue);
+    reader.GetQueries(cin, cout, handler);
 }

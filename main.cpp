@@ -11,8 +11,10 @@ using namespace std;
 
 int main()
 {
-    testTaskJson();
+    testMain();
     return 0;
+    testTaskJsonN();
+    testTaskJson();
     testJSON();
 
     TG::input::InputReader reader;

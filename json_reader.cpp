@@ -43,7 +43,7 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
             for (const auto &value : findStat->second.AsArray())
             {
                 catalogue::Requst req{"", value.AsMap().at("name").AsString()};
-                json::Dict newNode{{"id", value.AsMap().at("id").AsInt()}};
+                json::Dict newNode{{"request_id", value.AsMap().at("id").AsInt()}};
 
                 if (tagStop == value.AsMap().at("type").AsString())
                 {
@@ -62,7 +62,6 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
 
 void ReaderJSON::MakeRequestStop(std::deque<catalogue::Requst> &stops, const json::Node &node)
 {
-    //ss << "Stop Marushkino: 55.595884, 37.209755, 9900m to Rasskazovka, 100m to Marushkino\n";
     std::stringstream ss;
     ss << node.AsMap().at("name").AsString() << ": "
        << node.AsMap().at("latitude").AsDouble() << ", "
@@ -81,7 +80,6 @@ void ReaderJSON::MakeRequestStop(std::deque<catalogue::Requst> &stops, const jso
 
 void ReaderJSON::MakeRequestBus(std::deque <catalogue::Requst> &stops, const json::Node &node)
 {
-//ss << "Bus 256: Biryulyovo Zapadnoye > Biryusinka > Universam > Biryulyovo Tovarnaya > Biryulyovo Passazhirskaya > Biryulyovo Zapadnoye\n";
     std::stringstream ss;
     ss << node.AsMap().at("name").AsString() << ": ";
     bool next =false;
@@ -118,7 +116,7 @@ void ReaderJSON::MakeAnswerStopInfo(RH::RequestHandler &transport, catalogue::Re
     }
     else
     {
-        node.emplace("error_message", "not found");
+        node.emplace("error_message", std::string{"not found"});
     }
 }
 
@@ -134,7 +132,7 @@ void ReaderJSON::MakeAnswerBusInfo(RH::RequestHandler &transport, catalogue::Req
     }
     else
     {
-        node.emplace("error_message", "not found");
+        node.emplace("error_message", std::string{"not found"});
     }
 }
 
