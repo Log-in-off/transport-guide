@@ -38,6 +38,7 @@ public:
     bool GetBusesByStop(const catalogue::Requst &requst, catalogue::StopInfo &answer) const;
     //const std::unordered_set<catalogue::StopInfo>* GetBusesByStop(const std::string_view& stop_name) const;
 
+    void GetBusAndStops();
     // Этот метод будет нужен в следующей части итогового проекта
     //svg::Document RenderMap() const;
 

@@ -5,3 +5,21 @@
  * Визуализация маршрутов вам понадобится во второй части итогового проекта.
  * Пока можете оставить файл пустым.
  */
+namespace TG
+{
+namespace renderer
+{
+
+void MapRenderer::SetParamMap(ParamsMap &params)
+{
+
+}
+
+void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output)
+{
+    transport.GetBusAndStops();
+
+}
+
+}
+}

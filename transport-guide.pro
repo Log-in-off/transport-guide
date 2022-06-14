@@ -14,6 +14,7 @@ SOURCES += \
         stat_reader.cpp \
         svg.cpp \
         test_json.cpp \
+        test_map_renderer.cpp \
         test_svg.cpp \
         tests.cpp \
         transport_catalogue.cpp
@@ -29,6 +30,7 @@ HEADERS += \
     stat_reader.h \
     svg.h \
     test_json.h \
+    test_map_renderer.h \
     test_svg.h \
     tests.h \
     transport_catalogue.h

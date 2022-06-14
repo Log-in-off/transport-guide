@@ -10,7 +10,7 @@
 
 namespace TG
 {
-void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::RequestHandler &transport)
+void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::RequestHandler &transport, renderer::MapRenderer *map)
 {
     using namespace std::literals;
     std::deque <catalogue::Requst> stops;
@@ -57,6 +57,9 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
             }
             json::Print(json::Document{out}, output);
         }
+        renderer::ParamsMap param;
+        if (map)
+            map->SetParamMap(param);
     }
 }
 

@@ -23,6 +23,11 @@ bool RequestHandler::GetBusesByStop(const catalogue::Requst &requst, catalogue::
     return db_.FindStop(requst, answer);
 }
 
+void RequestHandler::GetBusAndStops()
+{
+
+}
+
 bool RequestHandler::GetBusStat(const catalogue::Requst &requst, catalogue::BusInfo &answer) const
 {
     return db_.GetBusInfo(requst, answer);
