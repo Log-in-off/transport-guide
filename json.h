@@ -9,7 +9,6 @@
 
 namespace json {
 
-
 class Node;
 // Сохраните объявления Dict и Array без изменения
 using Dict = std::map<std::string, Node>;
@@ -80,14 +79,13 @@ Document Load(std::istream& input);
 void Print(const Document& doc, std::ostream& output);
 void PrintNode(const Node& node, std::ostream& out);
 
-template <typename Value>
-void PrintValue(const Value& value, std::ostream& out) {
-    out << value;
-}
-
 // Перегрузка функции PrintValue для вывода значений null
 void PrintValue(std::nullptr_t, std::ostream& out);
 void PrintValue(bool value, std::ostream& out);
 void PrintValue(std::string value, std::ostream& out);
+void PrintValue(int value, std::ostream& out);
+void PrintValue(double value, std::ostream& out);
+void PrintValue(const Array &array, std::ostream& out);
+void PrintValue(const Dict &dict, std::ostream& out);
 
 }  // namespace json

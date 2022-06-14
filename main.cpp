@@ -11,11 +11,12 @@ using namespace std;
 
 int main()
 {
+    testTask3();
     testTaskJsonN();
     return 0;
+    testJSON();
     testMain();
     testTaskJson();
-    testJSON();
 
     TG::input::InputReader reader;
     TG::catalogue::TransportCatalogue catalogue;

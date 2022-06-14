@@ -63,9 +63,10 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
 void ReaderJSON::MakeRequestStop(std::deque<catalogue::Requst> &stops, const json::Node &node)
 {
     std::stringstream ss;
-    ss << node.AsMap().at("name").AsString() << ": "
-       << node.AsMap().at("latitude").AsDouble() << ", "
-       << node.AsMap().at("longitude").AsDouble();
+    ss << node.AsMap().at("name").AsString() << ": ";
+    json::PrintNode(node.AsMap().at("latitude"), ss);
+    ss << ", ";
+    json::PrintNode(node.AsMap().at("longitude"), ss);
 
     auto findDistances = node.AsMap().find("road_distances");
     if (findDistances != node.AsMap().end())

@@ -117,7 +117,6 @@ bool TransportCatalogue::FindStop(const Requst &requst, StopInfo &answer) const
 void TransportCatalogue::AddBus(const Requst & requst)
 {
     size_t fName = requst.start.find_first_of(':');
-
     string_view name = requst.start.substr(0, fName);
     string nameS {name};
     vector <string_view> stops;

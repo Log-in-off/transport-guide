@@ -128,6 +128,12 @@ void TestNumbers() {
     assert(Print(Node{-42}) == "-42"s);
     assert(Print(Node{-3.5}) == "-3.5"s);
 
+    //double d = 3.14159265358979;
+    //std::cout.precision(dbl::max_digits10);
+    //std::cout << d << std::endl;
+    std::cout << Print(Node{55.595884});
+    assert(Print(Node{55.595884}) == "55.595884"s);
+
     assert(LoadJSON("42"s).GetRoot() == int_node);
     assert(LoadJSON("123.45"s).GetRoot() == dbl_node);
     assert(LoadJSON("0.25"s).GetRoot().AsDouble() == 0.25);

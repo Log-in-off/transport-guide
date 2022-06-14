@@ -1,5 +1,5 @@
 #include "json.h"
-
+#include <limits>
 using namespace std;
 
 namespace json {
@@ -379,41 +379,30 @@ void PrintNode(const Node& node, std::ostream& out) {
     node.GetValue());
 }
 
-ostream &operator<<(std::ostream &out, const Array &array)
+void PrintValue( const Dict &dict, std::ostream& out)
 {
     bool next = false;
-    out << "[";
-    for (const auto & value:array )
-    {
-        if (next)
-            out << ',';
-        next = true;
-        PrintNode(value, out);
-    }
-    out << "]";
-    return out;
-}
-
-ostream &operator<<(std::ostream &out, const Dict &dict)
-{
-    bool next = false;
-    out << "{ ";
+    out << "\n{ \n";
     for (const auto & value:dict )
     {
         if (next)
-            out << ", ";
+            out << ",\n";
         next = true;
         out << '\"';
         out << value.first << "\": ";
         PrintNode(value.second, out);
     }
-    out << " }";
-    return out;
+    out << "\n}";
 }
 
 // Перегрузка функции PrintValue для вывода значений null
 void PrintValue(std::nullptr_t, std::ostream& out) {
     out << "null"sv;
+}
+
+void PrintValue(double value, std::ostream& out) {
+    out.precision(10);
+    out << value;
 }
 
 void PrintValue(bool value, std::ostream& out) {
@@ -444,6 +433,25 @@ void PrintValue(string value, std::ostream& out) {
             out << *i;
     }
     out << "\"";
+}
+
+void PrintValue(int value, std::ostream &out)
+{
+    out << value;
+}
+
+void PrintValue(const Array &array, std::ostream &out)
+{
+    bool next = false;
+    out << "[";
+    for (const auto & value:array )
+    {
+        if (next)
+            out << ',';
+        next = true;
+        PrintNode(value, out);
+    }
+    out << "]";
 }
 
 }  // namespace json

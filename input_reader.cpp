@@ -25,11 +25,15 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
     //потом заполняем хеш таблицу расстояний между ними, используя указатели уже добавленных станций в качестве хеша
     //можно разнести по разным методам, но тогда придется вводить еще один метод, который будет общим для них обоих
     //Если это важно, оставьте комментарий рекомедованно к изменению. к сдаче следующего спринта разделю.
-    for (int i = 0; i < 2; i++)
-        for(auto &value: stops)
-        {
-            catalogue.AddStop(value);
-        }
+
+    for(auto &value: stops)
+    {
+        catalogue.AddStop(value);
+    }
+    for(auto &value: stops)
+    {
+        catalogue.AddDurationsBetweenStop(value);
+    }
 
     for(auto &value: buses)
     {
