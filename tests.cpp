@@ -97,6 +97,7 @@ void TestAddRouteBeforeStops()
 
 */
 #include <iostream>
+#include <fstream>
 #include <sstream>
 
 
@@ -136,4 +137,25 @@ void testTask3(void)
     TG::catalogue::TransportCatalogue catalogue;
     reader.GetQueries(ss, catalogue);
     statReader.GetQueries(stat, cout, catalogue);
+}
+
+#include "json_reader.h"
+void testTaskJson(void)
+{
+    using namespace std;
+    ifstream ifs("input.txt");
+    if( ifs.is_open())
+    {
+
+        TG::catalogue::TransportCatalogue catalogue;
+        TG::ReaderJSON reader;
+        TG::RH::RequestHandler handler(catalogue);
+        reader.GetQueries(ifs, cout, handler);
+    }
+    //std::cin.rdbuf(ifs.rdbuf());
+    //
+    //string input;
+    //cin >> input;
+    //cout << input;
+
 }

@@ -24,10 +24,11 @@ struct Stop
 
 struct Requst
 {
-   std::string text;
+    std::string text;
     std::string_view start;
 
     Requst();
+    Requst(std::string textInput);
     Requst(std::string text, std::string_view start);
 };
 
@@ -79,10 +80,12 @@ class TransportCatalogue
 {
 public:
     void AddStop(const Requst &requst);
-    bool FindStop(Requst &requst, StopInfo &answer);
-    void AddBus(Requst &requst);
+    void AddDurationsBetweenStop(const Requst &requst);
+    bool FindStop(const Requst &requst, StopInfo &answer) const;
+    void AddBus(const Requst &requst);
     //void FindBus();
-    bool GetBusInfo(Requst &requst, BusInfo &answer);
+    bool GetBusInfo(const Requst &requst, BusInfo &answer) const;
+
 private:
     std::deque <Stop> stops_;
     std::unordered_map <std::string_view, Stop *> stopnameToStops_;

@@ -1,9 +1,32 @@
 #include "request_handler.h"
+#include <algorithm>
+namespace TG
+{
+namespace RH
+{
 
-/*
- * Здесь можно было бы разместить код обработчика запросов к базе, содержащего логику, которую не
- * хотелось бы помещать ни в transport_catalogue, ни в json reader.
- *
- * Если вы затрудняетесь выбрать, что можно было бы поместить в этот файл,
- * можете оставить его пустым.
- */
+RequestHandler::RequestHandler(catalogue::TransportCatalogue &db):db_(db) {}
+
+void RequestHandler::AddAllStops(const std::deque<catalogue::Requst> &stops)
+{
+    std::for_each(stops.begin(), stops.end(), [&] (auto &req) {db_.AddStop(req);});
+    std::for_each(stops.begin(), stops.end(), [&] (auto &req) {db_.AddDurationsBetweenStop(req);});
+}
+
+void RequestHandler::AddAllBuses(const std::deque<catalogue::Requst> &buses)
+{
+    std::for_each(buses.begin(), buses.end(), [&] (auto &req) {db_.AddBus(req);});
+}
+
+bool RequestHandler::GetBusesByStop(const catalogue::Requst &requst, catalogue::StopInfo &answer) const
+{
+    return db_.FindStop(requst, answer);
+}
+
+bool RequestHandler::GetBusStat(const catalogue::Requst &requst, catalogue::BusInfo &answer) const
+{
+    return db_.GetBusInfo(requst, answer);
+}
+
+}
+}

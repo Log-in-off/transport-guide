@@ -12,6 +12,8 @@ namespace catalogue
 {
 
 Requst::Requst():text(""), start(text) {}
+
+Requst::Requst(std::string textInput):text(textInput), start(text) {}
 Requst::Requst(std::string text, std::string_view start):text(text), start(start) {}
 
 BusInput::BusInput():name(""), request(""), stops({}){}
@@ -35,24 +37,26 @@ size_t DurationHasher::operator() (const std::pair <const Stop*, const Stop*>& f
     return std::hash<const void*>{}(f.first) * 37 + std::hash<const void*>{}(f.second) * pow(37, 3);
 }
 
-
 void TransportCatalogue::AddStop(const Requst &requst)
 {
     size_t fName = requst.start.find_first_of(':');
+    size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
+    string nameS {requst.start.substr(0, fName)};
 
+    const double lat = ::stod(requst.start.substr(fName + 2, requst.start.size() - fSplitCoordinates-1).data());
+    const double lng = ::stod(requst.start.substr(fSplitCoordinates + 2, requst.start.size() - fSplitCoordinates).data());
+    stops_.push_back({move(nameS), {lat, lng}, {}});
+    stopnameToStops_.insert({stops_.back().name, &stops_.back()});
+}
+
+void TransportCatalogue::AddDurationsBetweenStop(const Requst &requst)
+{
+    size_t fName = requst.start.find_first_of(':');
     size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
     string_view name = requst.start.substr(0, fName);
+
     auto fMainStop = stopnameToStops_.find(name);
-    if ( fMainStop == stopnameToStops_.end())
-    {
-        //первый проход добавления. добавляем остановки без заполнения хеша расстояний
-        string nameS {name};
-        const double lat = ::stod(requst.start.substr(fName + 2, requst.start.size() - fSplitCoordinates-1).data());
-        const double lng = ::stod(requst.start.substr(fSplitCoordinates + 2, requst.start.size() - fSplitCoordinates).data());
-        stops_.push_back({move(nameS), {lat, lng}, {}});
-        stopnameToStops_.insert({stops_.back().name, &stops_.back()});
-    }
-    else
+    if ( fMainStop != stopnameToStops_.end())
     {
         // заполняем хеш-таблицу расстояний
         bool not_end_request = true;
@@ -85,9 +89,10 @@ void TransportCatalogue::AddStop(const Requst &requst)
             tableDurations_[{fMainStop->second, fStop->second}] = duration;
         }
     }
+
 }
 
-bool TransportCatalogue::FindStop(Requst &requst, StopInfo &answer)
+bool TransportCatalogue::FindStop(const Requst &requst, StopInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;
@@ -109,7 +114,7 @@ bool TransportCatalogue::FindStop(Requst &requst, StopInfo &answer)
     return true;
 }
 
-void TransportCatalogue::AddBus(Requst & requst)
+void TransportCatalogue::AddBus(const Requst & requst)
 {
     size_t fName = requst.start.find_first_of(':');
 
@@ -193,7 +198,7 @@ void TransportCatalogue::AddBus(Requst & requst)
     addedBus.curvature =  static_cast<double_t>(factDistans) /geoDist;
 }
 
-bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
+bool TransportCatalogue::GetBusInfo(const Requst &requst,  BusInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;
@@ -215,6 +220,8 @@ bool TransportCatalogue::GetBusInfo(Requst &requst,  BusInfo &answer)
 
     return true;
 }
+
+
 
 }
 }

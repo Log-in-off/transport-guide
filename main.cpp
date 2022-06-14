@@ -11,8 +11,9 @@ using namespace std;
 
 int main()
 {
-    testJSON();
+    testTaskJson();
     return 0;
+    testJSON();
 
     TG::input::InputReader reader;
     TG::catalogue::TransportCatalogue catalogue;
