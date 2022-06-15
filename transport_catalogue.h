@@ -83,8 +83,9 @@ public:
     void AddDurationsBetweenStop(const Requst &requst);
     bool FindStop(const Requst &requst, StopInfo &answer) const;
     void AddBus(const Requst &requst);
-    //void FindBus();
-    bool GetBusInfo(const Requst &requst, BusInfo &answer) const;
+    std::map <const std::string_view, const Bus *> GetBusesInfo() const;
+    bool FindBus(const Requst &requst, BusInfo &answer) const;
+
 
 private:
     std::deque <Stop> stops_;

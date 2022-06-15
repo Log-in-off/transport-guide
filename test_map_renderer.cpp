@@ -5,10 +5,12 @@
 #include "json_reader.h"
 #include "map_renderer.h"
 
+#include <iomanip>
 void testRender()
 {
      using namespace std;
-     ifstream ifs("input.json");
+
+     ifstream ifs("input1.json");
      if( ifs.is_open())
      {
          TG::catalogue::TransportCatalogue catalogue;
@@ -18,5 +20,4 @@ void testRender()
          reader.GetQueries(ifs, cout, transport, &map);
          map.RenderMap(transport, cout);
      }
-
 }

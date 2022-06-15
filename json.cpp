@@ -401,8 +401,10 @@ void PrintValue(std::nullptr_t, std::ostream& out) {
 }
 
 void PrintValue(double value, std::ostream& out) {
+    size_t t= cout.precision();
     out.precision(10);
     out << value;
+    out.precision(t);
 }
 
 void PrintValue(bool value, std::ostream& out) {

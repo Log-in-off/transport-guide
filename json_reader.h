@@ -18,6 +18,10 @@ public:
 private:
     const std::string tagBus = "Bus";
     const std::string tagStop = "Stop";
+    void FillingCatalogue(json::Document &doc, RH::RequestHandler &transport);
+    void GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &transport, std::ostream& output);
+    void GetSettingsForMap(json::Document &doc, renderer::MapRenderer *map);
+    svg::Color GetColor(const json::Node &node);
     void MakeRequestStop(std::deque <catalogue::Requst> &stops, const json::Node &node);
     void MakeRequestBus(std::deque <catalogue::Requst> &stops, const json::Node &node);
     void MakeAnswerStopInfo(RH::RequestHandler &transport, catalogue::Requst &req, json::Dict &node);

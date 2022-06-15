@@ -197,7 +197,12 @@ void TransportCatalogue::AddBus(const Requst & requst)
     addedBus.curvature =  static_cast<double_t>(factDistans) /geoDist;
 }
 
-bool TransportCatalogue::GetBusInfo(const Requst &requst,  BusInfo &answer) const
+std::map <const string_view, const Bus *> TransportCatalogue::GetBusesInfo() const
+{
+    return {busNameToBus_.begin(), busNameToBus_.end()};
+}
+
+bool TransportCatalogue::FindBus(const Requst &requst,  BusInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;

@@ -23,14 +23,14 @@ bool RequestHandler::GetBusesByStop(const catalogue::Requst &requst, catalogue::
     return db_.FindStop(requst, answer);
 }
 
-void RequestHandler::GetBusAndStops()
+std::map <const std::string_view, const catalogue::Bus *> RequestHandler::GetBusAndStops()
 {
-
+    return db_.GetBusesInfo();
 }
 
 bool RequestHandler::GetBusStat(const catalogue::Requst &requst, catalogue::BusInfo &answer) const
 {
-    return db_.GetBusInfo(requst, answer);
+    return db_.FindBus(requst, answer);
 }
 
 }

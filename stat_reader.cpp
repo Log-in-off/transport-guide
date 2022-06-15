@@ -50,7 +50,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
         else if (type == getBus)
         {
             catalogue::BusInfo answer;
-            if (catalogue.GetBusInfo(req, answer))
+            if (catalogue.FindBus(req, answer))
             {
                 out << "Bus " << answer.name << ": " << answer.countStops
                               << " stops on route, " << answer.countUnicStops
