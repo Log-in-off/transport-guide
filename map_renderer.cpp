@@ -46,6 +46,8 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
      size_t select_color = 0;
      for (const auto & bus:base)
      {
+         if (bus.second->stops.empty())
+             continue;
 
          doc.Add(CreateBusLine(proj, bus.second->stops).SetStrokeWidth(settings->line_width)
                                                        .SetStrokeLineCap(svg::StrokeLineCap::ROUND)

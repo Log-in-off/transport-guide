@@ -402,7 +402,7 @@ void PrintValue(std::nullptr_t, std::ostream& out) {
 
 void PrintValue(double value, std::ostream& out) {
     size_t t= cout.precision();
-    out.precision(10);
+    out.precision(11);
     out << value;
     out.precision(t);
 }
