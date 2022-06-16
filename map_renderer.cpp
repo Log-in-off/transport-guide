@@ -69,7 +69,7 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
 
          MakeLableBus(doc, proj, bus.first, bus.second->stops.front()->coordinates, select_color);
 
-        if (!bus.second->isRoundtrip)
+        if (!bus.second->isRoundtrip && !(bus.second->stops.front()->name == bus.second->stops.at(bus.second->stops.size()/2)->name))
             MakeLableBus(doc, proj, bus.first, bus.second->stops.at(bus.second->stops.size()/2)->coordinates, select_color);
 
         if (++select_color >= settings->color_palette.size())
