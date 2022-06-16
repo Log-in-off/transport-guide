@@ -21,8 +21,7 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
         if (map)
             GetSettingsForMap(doc, map);
 
-        (void) output;
-        //временно GetRequstsToCatalogue(doc, transport, output);
+        GetRequstsToCatalogue(doc, transport, output, map);
     }
 }
 
@@ -49,7 +48,7 @@ void ReaderJSON::FillingCatalogue(json::Document &doc, RH::RequestHandler &trans
     transport.AddAllBuses(buses);
 }
 
-void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &transport, std::ostream &output)
+void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &transport, std::ostream &output, renderer::MapRenderer *map)
 {
     auto findStat = doc.GetRoot().AsMap().find("stat_requests");
     if (findStat != doc.GetRoot().AsMap().end() && findStat->second.IsArray() && !findStat->second.AsArray().empty())
@@ -57,16 +56,21 @@ void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &
         json::Array out;
         for (const auto &value : findStat->second.AsArray())
         {
-            catalogue::Requst req{"", value.AsMap().at("name").AsString()};
             json::Dict newNode{{"request_id", value.AsMap().at("id").AsInt()}};
 
             if (tagStop == value.AsMap().at("type").AsString())
             {
+                catalogue::Requst req{"", value.AsMap().at("name").AsString()};
                 MakeAnswerStopInfo(transport, req, newNode);
             }
             else if (tagBus == value.AsMap().at("type").AsString())
             {
+                catalogue::Requst req{"", value.AsMap().at("name").AsString()};
                 MakeAnswerBusInfo(transport, req, newNode);
+            }
+            else if (tagMap == value.AsMap().at("type").AsString())
+            {
+                MakeAnswerMap(transport, newNode, map);
             }
             out.push_back(newNode);
         }
@@ -196,6 +200,13 @@ void ReaderJSON::MakeAnswerBusInfo(RH::RequestHandler &transport, catalogue::Req
     {
         node.emplace("error_message", std::string{"not found"});
     }
+}
+
+void ReaderJSON::MakeAnswerMap(RH::RequestHandler &transport, json::Dict &node, renderer::MapRenderer *map)
+{
+    std::stringstream ss;
+    map->RenderMap(transport, ss);
+    node.emplace("map", ss.str());
 }
 
 

@@ -65,3 +65,17 @@ void testRender2_1()
          map.RenderMap(transport, cout);
      }
 }
+
+void testRender3_1()
+{
+     using namespace std;
+     ifstream ifs("input3_1.json");
+     if( ifs.is_open())
+     {
+         TG::catalogue::TransportCatalogue catalogue;
+         TG::ReaderJSON reader;
+         TG::RH::RequestHandler transport(catalogue);
+         TG::renderer::MapRenderer map;
+         reader.GetQueries(ifs, cout, transport, &map);
+     }
+}

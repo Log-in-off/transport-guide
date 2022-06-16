@@ -32,17 +32,8 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
         return;
 
     std::map <const std::string_view, const catalogue::Bus *> base = transport.GetBuses();
-    //std::unordered_set<const geo::Coordinates*> pointOnMap;
     std::map <const std::string_view, const catalogue::Stop *> stops = transport.GetUsedStop();
 
-    //for (const auto & bus:base)
-    //{
-    //    for (const auto & stop:bus.second->stops)
-    //    {
-    //        pointOnMap.insert(&stop->coordinates);
-    //        stops.insert({stop->name, stop});
-    //    }
-    //}
     const SphereProjector proj {stops.begin(), stops.end(), settings->width, settings->height, settings->padding};
 
      svg::Document doc;
