@@ -19,9 +19,9 @@ Requst::Requst(std::string text, std::string_view start):text(text), start(start
 BusInput::BusInput():name(""), request(""), stops({}){}
 BusInput::BusInput(std::string name, std::string request, std::vector <std::string_view> stops):name(name), request(request), stops(stops){}
 
-Bus::Bus():name(""), stops({}), countUnicStops(0), distance(0), curvature(0){}
-Bus::Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature)
-               :name(name), stops(stops), countUnicStops(countUnicStops), distance(distance), curvature(curvature){}
+Bus::Bus():name(""), stops({}), countUnicStops(0), distance(0), curvature(0), isRoundtrip(false){}
+Bus::Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature, bool isRoundtrip)
+               :name(name), stops(stops), countUnicStops(countUnicStops), distance(distance), curvature(curvature), isRoundtrip(isRoundtrip){}
 
 BusInfo::BusInfo():name(""), countStops(0), countUnicStops(0), distance(0), curvature(0) {}
 BusInfo::BusInfo(std::string name, uint32_t countStops, uint32_t countUnicStops, uint32_t distance, double_t curvature)
@@ -122,12 +122,12 @@ void TransportCatalogue::AddBus(const Requst & requst)
     vector <string_view> stops;
     size_t fStartStops = fName+1;
     bool not_end_request = true;
-    bool cycle = false;
+    bool lineTrip = false;
     string spliter = ">";
 
     if (string::npos == requst.start.find_first_of(">", fStartStops))
     {
-        cycle = true;
+        lineTrip = true;
         spliter = "-";
     }
 
@@ -155,7 +155,7 @@ void TransportCatalogue::AddBus(const Requst & requst)
     uint32_t factDistans = 0;
     double_t geoDist = 0;
 
-    buses_.push_back({move(nameS), {}, 0, 0, 0});
+    buses_.push_back({move(nameS), {}, 0, 0, 0, !lineTrip});
 
     Bus & addedBus = buses_.back();
     for (string_view value : stops)
@@ -175,7 +175,7 @@ void TransportCatalogue::AddBus(const Requst & requst)
         firstStop = f->second;
     }
 
-    if (cycle)
+    if (lineTrip)
     {
         geoDist *= 2;
         for (int i = stops.size() - 2; i >= 0 ; i-- )

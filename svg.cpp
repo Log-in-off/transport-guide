@@ -149,7 +149,7 @@ void Text::RenderObject(const RenderContext &context) const
     //  </text>
 
     auto& out = context.out;
-    out << "<text "sv;
+    out << "<text"sv;
     RenderAttrs(context.out);
 
     out << " x=\""sv << pos_.x << "\" y=\""sv << pos_.y << "\""sv;

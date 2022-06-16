@@ -48,9 +48,10 @@ struct Bus
     uint32_t countUnicStops;
     uint32_t distance;
     double_t curvature;
+    bool isRoundtrip;
 
     Bus();
-    Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature);
+    Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature, bool isRoundtrip);
 };
 
 struct BusInfo {

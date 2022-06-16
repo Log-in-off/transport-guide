@@ -21,9 +21,10 @@ using namespace std;
 #include "test_json.h"
 int main()
 {
+    testRender2_1();
+    return 0;
     testJSON();
     testRender();
     testRender1();
     testRender2();
-    return 0;
 }

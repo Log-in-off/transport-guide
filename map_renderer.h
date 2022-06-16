@@ -113,6 +113,8 @@ public:
     void SetParamMap(ParamsMap &params);
     void RenderMap(RH::RequestHandler &transport, std::ostream &output);
 private:
+    void MakeLableBus(svg::Document &doc, const SphereProjector &proj, std::string_view nameBus, geo::Coordinates point, size_t numberColor);
+    void MakeLableStop(svg::Document &doc, const SphereProjector &proj, std::string_view nameStop, geo::Coordinates point);
     std::optional<ParamsMap> settings;
 
 };
