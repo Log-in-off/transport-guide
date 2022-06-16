@@ -48,16 +48,16 @@ SphereProjector::SphereProjector(PointInputIt points_begin, PointInputIt points_
     // Находим точки с минимальной и максимальной долготой
     const auto [left_it, right_it] = std::minmax_element(
         points_begin, points_end,
-        [](auto lhs, auto rhs) { return lhs->lng < rhs->lng; });
-    min_lon_ = (*left_it)->lng;
-    const double max_lon = (*right_it)->lng;
+        [](auto lhs, auto rhs) { return lhs.second->coordinates.lng < rhs.second->coordinates.lng; });
+    min_lon_ = (*left_it).second->coordinates.lng;
+    const double max_lon = (*right_it).second->coordinates.lng;
 
     // Находим точки с минимальной и максимальной широтой
     const auto [bottom_it, top_it] = std::minmax_element(
         points_begin, points_end,
-        [](auto lhs, auto rhs) { return lhs->lat < rhs->lat; });
-    const double min_lat = (*bottom_it)->lat;
-    max_lat_ = (*top_it)->lat;
+        [](auto lhs, auto rhs) { return lhs.second->coordinates.lat < rhs.second->coordinates.lat; });
+    const double min_lat = (*bottom_it).second->coordinates.lat;
+    max_lat_ = (*top_it).second->coordinates.lat;
 
     // Вычисляем коэффициент масштабирования вдоль координаты x
     std::optional<double> width_zoom;

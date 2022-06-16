@@ -31,18 +31,19 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
     if (!settings)
         return;
 
-    std::map <const std::string_view, const catalogue::Bus *> base = transport.GetBusAndStops();
-    std::unordered_set<const geo::Coordinates*> pointOnMap;
-    std::map <const std::string_view, const catalogue::Stop *> stops;
-    for (const auto & bus:base)
-    {
-        for (const auto & stop:bus.second->stops)
-        {
-            pointOnMap.insert(&stop->coordinates);
-            stops.insert({stop->name, stop});
-        }
-    }
-    const SphereProjector proj {pointOnMap.begin(), pointOnMap.end(), settings->width, settings->height, settings->padding};
+    std::map <const std::string_view, const catalogue::Bus *> base = transport.GetBuses();
+    //std::unordered_set<const geo::Coordinates*> pointOnMap;
+    std::map <const std::string_view, const catalogue::Stop *> stops = transport.GetUsedStop();
+
+    //for (const auto & bus:base)
+    //{
+    //    for (const auto & stop:bus.second->stops)
+    //    {
+    //        pointOnMap.insert(&stop->coordinates);
+    //        stops.insert({stop->name, stop});
+    //    }
+    //}
+    const SphereProjector proj {stops.begin(), stops.end(), settings->width, settings->height, settings->padding};
 
      svg::Document doc;
      size_t select_color = 0;

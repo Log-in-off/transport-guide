@@ -85,6 +85,7 @@ public:
     bool FindStop(const Requst &requst, StopInfo &answer) const;
     void AddBus(const Requst &requst);
     std::map <const std::string_view, const Bus *> GetBusesInfo() const;
+    std::map <const std::string_view, const Stop *> GetUsedStopInfo() const;
     bool FindBus(const Requst &requst, BusInfo &answer) const;
 
 

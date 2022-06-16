@@ -202,6 +202,17 @@ std::map <const string_view, const Bus *> TransportCatalogue::GetBusesInfo() con
     return {busNameToBus_.begin(), busNameToBus_.end()};
 }
 
+std::map<const string_view, const Stop *> TransportCatalogue::GetUsedStopInfo() const
+{
+    std::map<const string_view, const Stop *> answer;
+    for (const auto & stop: stops_)
+    {
+        if(!stop.buses.empty())
+            answer.insert({stop.name, &stop});
+    }
+    return answer;
+}
+
 bool TransportCatalogue::FindBus(const Requst &requst,  BusInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
