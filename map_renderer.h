@@ -113,17 +113,11 @@ public:
     void SetParamMap(ParamsMap &params);
     void RenderMap(RH::RequestHandler &transport, std::ostream &output);
 private:
-    void MakeLableBus(svg::Document &doc, const SphereProjector &proj, std::string_view nameBus, geo::Coordinates point, size_t numberColor);
-    void MakeLableStop(svg::Document &doc, const SphereProjector &proj, std::string_view nameStop, geo::Coordinates point);
+    void MakeLabelBus(svg::Document &doc, const SphereProjector &proj, std::string_view nameBus, geo::Coordinates point, size_t numberColor);
+    void MakeLabelStop(svg::Document &doc, const SphereProjector &proj, std::string_view nameStop, geo::Coordinates point);
     std::optional<ParamsMap> settings;
 
 };
 
 }
 }
-
-/*
- * В этом файле вы можете разместить код, отвечающий за визуализацию карты маршрутов в формате SVG.
- * Визуализация маршрутов вам понадобится во второй части итогового проекта.
- * Пока можете оставить файл пустым.
- */

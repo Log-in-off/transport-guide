@@ -23,7 +23,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
             continue;        
 
         TypeRequset type;
-        domain::Requst req{"", input};
+        domain::Request req{"", input};
         if (!GetReques(input,type, req))
             continue;
 
@@ -62,7 +62,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
     }
 }
 
-bool StatReader::GetReques(const std::string & input, TypeRequset &type, domain::Requst &request)
+bool StatReader::GetReques(const std::string & input, TypeRequset &type, domain::Request &request)
 {
     if (input.empty())
         return false;

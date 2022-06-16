@@ -82,7 +82,7 @@ void PrintNode(const Node& node, std::ostream& out);
 // Перегрузка функции PrintValue для вывода значений null
 void PrintValue(std::nullptr_t, std::ostream& out);
 void PrintValue(bool value, std::ostream& out);
-void PrintValue(std::string value, std::ostream& out);
+void PrintValue(const std::string &value, std::ostream& out);
 void PrintValue(int value, std::ostream& out);
 void PrintValue(double value, std::ostream& out);
 void PrintValue(const Array &array, std::ostream& out);

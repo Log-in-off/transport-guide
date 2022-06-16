@@ -16,14 +16,14 @@ struct Stop
     std::set <std::string_view> buses;
 };
 
-struct Requst
+struct Request
 {
     std::string text;
     std::string_view start;
 
-    Requst();
-    Requst(std::string textInput);
-    Requst(std::string text, std::string_view start);
+    Request();
+    Request(const std::string &textInput);
+    Request(const std::string &text, std::string_view start);
 };
 
 struct BusInput {
@@ -32,7 +32,7 @@ struct BusInput {
     std::vector <std::string_view> stops;
 
     BusInput();
-    BusInput(std::string name, std::string request, std::vector <std::string_view> stops);
+    BusInput(const std::string &name, std::string request, std::vector <std::string_view> stops);
 };
 
 struct Bus
@@ -45,7 +45,7 @@ struct Bus
     bool isRoundtrip;
 
     Bus();
-    Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature, bool isRoundtrip);
+    Bus(const std::string & name, const std::vector <Stop*> & stops, uint32_t countUnicStops, uint32_t distance, double_t curvature, bool isRoundtrip);
 };
 
 struct BusInfo {
@@ -56,7 +56,7 @@ struct BusInfo {
     double_t curvature;
 
     BusInfo();
-    BusInfo(std::string name, uint32_t countStops, uint32_t countUnicStops, uint32_t distance, double_t curvature);
+    BusInfo(const std::string & name, uint32_t countStops, uint32_t countUnicStops, uint32_t distance, double_t curvature);
 };
 
 struct StopInfo {
@@ -64,7 +64,7 @@ struct StopInfo {
     std::vector <std::string_view> buses;
 
     StopInfo();
-    StopInfo(std::string name, std::vector <std::string_view> buses);
+    StopInfo(const std::string & name, const std::vector <std::string_view> & buses);
 };
 
 }

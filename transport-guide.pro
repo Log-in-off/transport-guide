@@ -5,6 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
         domain.cpp \
+        geo.cpp \
         input_reader.cpp \
         json.cpp \
         json_reader.cpp \

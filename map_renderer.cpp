@@ -52,10 +52,10 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
          if (bus.second->stops.empty())
              continue;
 
-         MakeLableBus(doc, proj, bus.first, bus.second->stops.front()->coordinates, select_color);
+         MakeLabelBus(doc, proj, bus.first, bus.second->stops.front()->coordinates, select_color);
 
         if (!bus.second->isRoundtrip && !(bus.second->stops.front()->name == bus.second->stops.at(bus.second->stops.size()/2)->name))
-            MakeLableBus(doc, proj, bus.first, bus.second->stops.at(bus.second->stops.size()/2)->coordinates, select_color);
+            MakeLabelBus(doc, proj, bus.first, bus.second->stops.at(bus.second->stops.size()/2)->coordinates, select_color);
 
         if (++select_color >= settings->color_palette.size())
             select_color = 0;
@@ -69,13 +69,13 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
      }
      for (const auto & stop: stops)
      {
-         MakeLableStop(doc, proj, stop.second->name, stop.second->coordinates);
+         MakeLabelStop(doc, proj, stop.second->name, stop.second->coordinates);
      }
 
      doc.Render(output);
 }
 
-void MapRenderer::MakeLableBus( svg::Document &doc, const SphereProjector &proj, std::string_view nameBus, geo::Coordinates point, size_t numberColor)
+void MapRenderer::MakeLabelBus( svg::Document &doc, const SphereProjector &proj, std::string_view nameBus, geo::Coordinates point, size_t numberColor)
 {
     doc.Add(svg::Text()
                  .SetStrokeWidth(settings->underlayer_width)
@@ -100,7 +100,7 @@ void MapRenderer::MakeLableBus( svg::Document &doc, const SphereProjector &proj,
             .SetFillColor(settings->color_palette.at(numberColor)));
 }
 
-void MapRenderer::MakeLableStop(svg::Document &doc, const SphereProjector &proj, std::string_view nameStop, geo::Coordinates point)
+void MapRenderer::MakeLabelStop(svg::Document &doc, const SphereProjector &proj, std::string_view nameStop, geo::Coordinates point)
 {
     doc.Add(svg::Text()
                  .SetStrokeWidth(settings->underlayer_width)

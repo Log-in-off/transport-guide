@@ -18,7 +18,7 @@ size_t DurationHasher::operator() (const std::pair <const domain::Stop*, const d
     return std::hash<const void*>{}(f.first) * 37 + std::hash<const void*>{}(f.second) * pow(37, 3);
 }
 
-void TransportCatalogue::AddStop(const domain::Requst &requst)
+void TransportCatalogue::AddStop(const domain::Request &requst)
 {
     size_t fName = requst.start.find_first_of(':');
     size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
@@ -30,7 +30,7 @@ void TransportCatalogue::AddStop(const domain::Requst &requst)
     stopnameToStops_.insert({stops_.back().name, &stops_.back()});
 }
 
-void TransportCatalogue::AddDurationsBetweenStop(const domain::Requst &requst)
+void TransportCatalogue::AddDurationsBetweenStop(const domain::Request &requst)
 {
     size_t fName = requst.start.find_first_of(':');
     size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
@@ -73,7 +73,7 @@ void TransportCatalogue::AddDurationsBetweenStop(const domain::Requst &requst)
 
 }
 
-bool TransportCatalogue::FindStop(const domain::Requst &requst, domain::StopInfo &answer) const
+bool TransportCatalogue::FindStop(const domain::Request &requst, domain::StopInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;
@@ -95,7 +95,7 @@ bool TransportCatalogue::FindStop(const domain::Requst &requst, domain::StopInfo
     return true;
 }
 
-void TransportCatalogue::AddBus(const domain::Requst & requst)
+void TransportCatalogue::AddBus(const domain::Request & requst)
 {
     size_t fName = requst.start.find_first_of(':');
     string_view name = requst.start.substr(0, fName);
@@ -194,7 +194,7 @@ std::map<const string_view, const domain::Stop *> TransportCatalogue::GetUsedSto
     return answer;
 }
 
-bool TransportCatalogue::FindBus(const domain::Requst &requst,  domain::BusInfo &answer) const
+bool TransportCatalogue::FindBus(const domain::Request &requst,  domain::BusInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;

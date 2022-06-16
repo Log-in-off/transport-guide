@@ -411,7 +411,7 @@ void PrintValue(bool value, std::ostream& out) {
     out << std::boolalpha << value << std::noboolalpha;
 }
 
-void PrintValue(string value, std::ostream& out) {
+void PrintValue(const string &value, std::ostream& out) {
     out << "\"";
     for (auto i = value.begin(); i < value.end(); i++)
     {

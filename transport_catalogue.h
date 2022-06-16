@@ -23,13 +23,13 @@ struct DurationHasher {
 class TransportCatalogue
 {
 public:
-    void AddStop(const domain::Requst &requst);
-    void AddDurationsBetweenStop(const domain::Requst &requst);
-    bool FindStop(const domain::Requst &requst, domain::StopInfo &answer) const;
-    void AddBus(const domain::Requst &requst);
+    void AddStop(const domain::Request &requst);
+    void AddDurationsBetweenStop(const domain::Request &requst);
+    bool FindStop(const domain::Request &requst, domain::StopInfo &answer) const;
+    void AddBus(const domain::Request &requst);
     std::map <const std::string_view, const domain::Bus *> GetBusesInfo() const;
     std::map <const std::string_view, const domain::Stop *> GetUsedStopInfo() const;
-    bool FindBus(const domain::Requst &requst, domain::BusInfo &answer) const;
+    bool FindBus(const domain::Request &requst, domain::BusInfo &answer) const;
 
 private:
     std::deque <domain::Stop> stops_;

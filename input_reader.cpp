@@ -11,8 +11,8 @@ namespace input
 
 void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogue &catalogue)
 {
-    std::deque <domain::Requst> stops;
-    std::deque <domain::Requst> buses;
+    std::deque <domain::Request> stops;
+    std::deque <domain::Request> buses;
     int count = 0;
     iStream >> count;
     for (int i= 0; i <= count; i++)
@@ -36,7 +36,7 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
     }
 }
 
-void InputReader::GetRequests(std::istream &iStream,  std::deque<domain::Requst> &stops, std::deque<domain::Requst> &buses)
+void InputReader::GetRequests(std::istream &iStream,  std::deque<domain::Request> &stops, std::deque<domain::Request> &buses)
 {
     string input;
     getline(iStream, input);
@@ -46,7 +46,7 @@ void InputReader::GetRequests(std::istream &iStream,  std::deque<domain::Requst>
     const string headBus = "Bus ";
     const string headStop = "Stop ";
     size_t head;
-    deque <domain::Requst> * requsts;
+    deque <domain::Request> * requsts;
     size_t findHeadBus = input.find(headBus);
     size_t findHeadStop = input.find(headStop);
     if (findHeadBus == 0)
