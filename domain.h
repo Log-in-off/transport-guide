@@ -1,13 +1,71 @@
 #pragma once
+#include <iostream>
+#include <vector>
+#include <set>
 
-/*
- * В этом файле вы можете разместить классы/структуры, которые являются частью предметной области (domain)
- * вашего приложения и не зависят от транспортного справочника. Например Автобусные маршруты и Остановки. 
- *
- * Их можно было бы разместить и в transport_catalogue.h, однако вынесение их в отдельный
- * заголовочный файл может оказаться полезным, когда дело дойдёт до визуализации карты маршрутов:
- * визуализатор карты (map_renderer) можно будет сделать независящим от транспортного справочника.
- *
- * Если структура вашего приложения не позволяет так сделать, просто оставьте этот файл пустым.
- *
- */
+#include "geo.h"
+namespace TG
+{
+namespace domain
+{
+
+struct Stop
+{
+    std::string name;
+    geo::Coordinates coordinates;
+    std::set <std::string_view> buses;
+};
+
+struct Requst
+{
+    std::string text;
+    std::string_view start;
+
+    Requst();
+    Requst(std::string textInput);
+    Requst(std::string text, std::string_view start);
+};
+
+struct BusInput {
+    std::string name;
+    std::string request;
+    std::vector <std::string_view> stops;
+
+    BusInput();
+    BusInput(std::string name, std::string request, std::vector <std::string_view> stops);
+};
+
+struct Bus
+{
+    std::string name;
+    std::vector <Stop*> stops;
+    uint32_t countUnicStops;
+    uint32_t distance;
+    double_t curvature;
+    bool isRoundtrip;
+
+    Bus();
+    Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature, bool isRoundtrip);
+};
+
+struct BusInfo {
+    std::string name;
+    uint32_t countStops;
+    uint32_t countUnicStops;
+    uint32_t distance;
+    double_t curvature;
+
+    BusInfo();
+    BusInfo(std::string name, uint32_t countStops, uint32_t countUnicStops, uint32_t distance, double_t curvature);
+};
+
+struct StopInfo {
+    std::string name;
+    std::vector <std::string_view> buses;
+
+    StopInfo();
+    StopInfo(std::string name, std::vector <std::string_view> buses);
+};
+
+}
+}

@@ -6,10 +6,7 @@
 #include "request_handler.h"
 #include "json.h"
 #include "map_renderer.h"
-/*
- * Здесь можно разместить код наполнения транспортного справочника данными из JSON,
- * а также код обработки запросов к базе и формирование массива ответов в формате JSON
- */
+
 namespace TG {
 
 class ReaderJSON {
@@ -23,10 +20,10 @@ private:
     void GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &transport, std::ostream& output, renderer::MapRenderer *map);
     void GetSettingsForMap(json::Document &doc, renderer::MapRenderer *map);
     svg::Color GetColor(const json::Node &node);
-    void MakeRequestStop(std::deque <catalogue::Requst> &stops, const json::Node &node);
-    void MakeRequestBus(std::deque <catalogue::Requst> &stops, const json::Node &node);
-    void MakeAnswerStopInfo(RH::RequestHandler &transport, catalogue::Requst &req, json::Dict &node);
-    void MakeAnswerBusInfo(RH::RequestHandler &transport, catalogue::Requst &req, json::Dict &node);
+    void MakeRequestStop(std::deque <domain::Requst> &stops, const json::Node &node);
+    void MakeRequestBus(std::deque <domain::Requst> &stops, const json::Node &node);
+    void MakeAnswerStopInfo(RH::RequestHandler &transport, domain::Requst &req, json::Dict &node);
+    void MakeAnswerBusInfo(RH::RequestHandler &transport, domain::Requst &req, json::Dict &node);
     void MakeAnswerMap(RH::RequestHandler &transport, json::Dict &node, renderer::MapRenderer *map);
 };
 

@@ -11,8 +11,8 @@ namespace input
 
 void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogue &catalogue)
 {
-    std::deque <catalogue::Requst> stops;
-    std::deque <catalogue::Requst> buses;
+    std::deque <domain::Requst> stops;
+    std::deque <domain::Requst> buses;
     int count = 0;
     iStream >> count;
     for (int i= 0; i <= count; i++)
@@ -20,16 +20,11 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
         GetRequests(iStream, stops, buses);
     }
 
-    // дважды проходимся по списку остановок.
-    //сначала добавляем их в очередь
-    //потом заполняем хеш таблицу расстояний между ними, используя указатели уже добавленных станций в качестве хеша
-    //можно разнести по разным методам, но тогда придется вводить еще один метод, который будет общим для них обоих
-    //Если это важно, оставьте комментарий рекомедованно к изменению. к сдаче следующего спринта разделю.
-
     for(auto &value: stops)
     {
         catalogue.AddStop(value);
     }
+
     for(auto &value: stops)
     {
         catalogue.AddDurationsBetweenStop(value);
@@ -41,7 +36,7 @@ void InputReader::GetQueries(std::istream &iStream, catalogue::TransportCatalogu
     }
 }
 
-void InputReader::GetRequests(std::istream &iStream,  std::deque <catalogue::Requst> &stops, std::deque <catalogue::Requst> &buses)
+void InputReader::GetRequests(std::istream &iStream,  std::deque<domain::Requst> &stops, std::deque<domain::Requst> &buses)
 {
     string input;
     getline(iStream, input);
@@ -51,7 +46,7 @@ void InputReader::GetRequests(std::istream &iStream,  std::deque <catalogue::Req
     const string headBus = "Bus ";
     const string headStop = "Stop ";
     size_t head;
-    deque <catalogue::Requst> * requsts;
+    deque <domain::Requst> * requsts;
     size_t findHeadBus = input.find(headBus);
     size_t findHeadStop = input.find(headStop);
     if (findHeadBus == 0)

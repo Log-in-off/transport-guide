@@ -1,17 +1,11 @@
 #include "map_renderer.h"
 
-/*
- * В этом файле вы можете разместить код, отвечающий за визуализацию карты маршрутов в формате SVG.
- * Визуализация маршрутов вам понадобится во второй части итогового проекта.
- * Пока можете оставить файл пустым.
- */
 namespace TG
 {
 namespace renderer
 {
 
-
-svg::Polyline CreateBusLine(const SphereProjector &proj, const std::vector <catalogue::Stop*> &stops) {
+svg::Polyline CreateBusLine(const SphereProjector &proj, const std::vector <domain::Stop*> &stops) {
     svg::Polyline polyline;
     for (const auto & stop: stops)
     {
@@ -31,8 +25,8 @@ void MapRenderer::RenderMap(RH::RequestHandler &transport,  std::ostream& output
     if (!settings)
         return;
 
-    std::map <const std::string_view, const catalogue::Bus *> base = transport.GetBuses();
-    std::map <const std::string_view, const catalogue::Stop *> stops = transport.GetUsedStop();
+    std::map <const std::string_view, const domain::Bus *> base = transport.GetBuses();
+    std::map <const std::string_view, const domain::Stop *> stops = transport.GetUsedStop();
 
     const SphereProjector proj {stops.begin(), stops.end(), settings->width, settings->height, settings->padding};
 

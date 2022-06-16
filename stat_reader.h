@@ -21,7 +21,7 @@ private:
         getBus,
         getStop
     };
-    bool GetReques(const std::string &input, TypeRequset &type, catalogue::Requst &request);
+    bool GetReques(const std::string &input, TypeRequset &type, domain::Requst &request);
 };
 
 }

@@ -27,8 +27,8 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
 
 void ReaderJSON::FillingCatalogue(json::Document &doc, RH::RequestHandler &transport)
 {
-    std::deque <catalogue::Requst> stops;
-    std::deque <catalogue::Requst> buses;
+    std::deque <domain::Requst> stops;
+    std::deque <domain::Requst> buses;
     auto findBaseReq = doc.GetRoot().AsMap().find("base_requests");
     if (findBaseReq !=  doc.GetRoot().AsMap().end() && findBaseReq->second.IsArray())
     {
@@ -60,12 +60,12 @@ void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &
 
             if (tagStop == value.AsMap().at("type").AsString())
             {
-                catalogue::Requst req{"", value.AsMap().at("name").AsString()};
+                domain::Requst req{"", value.AsMap().at("name").AsString()};
                 MakeAnswerStopInfo(transport, req, newNode);
             }
             else if (tagBus == value.AsMap().at("type").AsString())
             {
-                catalogue::Requst req{"", value.AsMap().at("name").AsString()};
+                domain::Requst req{"", value.AsMap().at("name").AsString()};
                 MakeAnswerBusInfo(transport, req, newNode);
             }
             else if (tagMap == value.AsMap().at("type").AsString())
@@ -125,7 +125,7 @@ svg::Color ReaderJSON::GetColor(const json::Node &node)
 }
 
 
-void ReaderJSON::MakeRequestStop(std::deque<catalogue::Requst> &stops, const json::Node &node)
+void ReaderJSON::MakeRequestStop(std::deque<domain::Requst> &stops, const json::Node &node)
 {
     std::stringstream ss;
     ss << node.AsMap().at("name").AsString() << ": ";
@@ -144,7 +144,7 @@ void ReaderJSON::MakeRequestStop(std::deque<catalogue::Requst> &stops, const jso
     stops.emplace_back((ss.str()));
 }
 
-void ReaderJSON::MakeRequestBus(std::deque <catalogue::Requst> &stops, const json::Node &node)
+void ReaderJSON::MakeRequestBus(std::deque <domain::Requst> &stops, const json::Node &node)
 {
     std::stringstream ss;
     ss << node.AsMap().at("name").AsString() << ": ";
@@ -170,9 +170,9 @@ void ReaderJSON::MakeRequestBus(std::deque <catalogue::Requst> &stops, const jso
     stops.emplace_back((ss.str()));
 }
 
-void ReaderJSON::MakeAnswerStopInfo(RH::RequestHandler &transport, catalogue::Requst &req, json::Dict &node)
+void ReaderJSON::MakeAnswerStopInfo(RH::RequestHandler &transport, domain::Requst &req, json::Dict &node)
 {
-    catalogue::StopInfo answer;
+    domain::StopInfo answer;
     if(transport.GetBusesByStop(req, answer))
     {
         json::Array buses;
@@ -186,9 +186,9 @@ void ReaderJSON::MakeAnswerStopInfo(RH::RequestHandler &transport, catalogue::Re
     }
 }
 
-void ReaderJSON::MakeAnswerBusInfo(RH::RequestHandler &transport, catalogue::Requst &req, json::Dict &node)
+void ReaderJSON::MakeAnswerBusInfo(RH::RequestHandler &transport, domain::Requst &req, json::Dict &node)
 {
-    catalogue::BusInfo answer;
+    domain::BusInfo answer;
     if (transport.GetBusStat(req, answer))
     {
         node.emplace("curvature", answer.curvature);

@@ -139,25 +139,13 @@ struct Point {
  * Хранит ссылку на поток вывода, текущее значение и шаг отступа при выводе элемента
  */
 struct RenderContext {
-    RenderContext(std::ostream& out)
-        : out(out) {
-    }
+    RenderContext(std::ostream& out);
 
-    RenderContext(std::ostream& out, int indent_step, int indent = 0)
-        : out(out)
-        , indent_step(indent_step)
-        , indent(indent) {
-    }
+    RenderContext(std::ostream& out, int indent_step, int indent = 0);
 
-    RenderContext Indented() const {
-        return {out, indent_step, indent + indent_step};
-    }
+    RenderContext Indented() const;
 
-    void RenderIndent() const {
-        for (int i = 0; i < indent; ++i) {
-            out.put(' ');
-        }
-    }
+    void RenderIndent() const;
 
     std::ostream& out;
     int indent_step = 0;

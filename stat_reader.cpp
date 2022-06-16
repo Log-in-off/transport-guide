@@ -1,5 +1,3 @@
-
-
 #include "stat_reader.h"
 
 #include <iomanip>
@@ -25,13 +23,13 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
             continue;        
 
         TypeRequset type;
-        catalogue::Requst req{"", input};
+        domain::Requst req{"", input};
         if (!GetReques(input,type, req))
             continue;
 
         if (type == getStop)
         {
-            catalogue::StopInfo answer;
+            domain::StopInfo answer;
             if (catalogue.FindStop(req, answer))
             {
                 if (answer.buses.size())
@@ -49,7 +47,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
         }
         else if (type == getBus)
         {
-            catalogue::BusInfo answer;
+            domain::BusInfo answer;
             if (catalogue.FindBus(req, answer))
             {
                 out << "Bus " << answer.name << ": " << answer.countStops
@@ -64,7 +62,7 @@ void StatReader::GetQueries(std::istream &iStream, ostream &out, catalogue::Tran
     }
 }
 
-bool StatReader::GetReques(const std::string & input, TypeRequset &type, catalogue::Requst &request)
+bool StatReader::GetReques(const std::string & input, TypeRequset &type, domain::Requst &request)
 {
     if (input.empty())
         return false;

@@ -11,33 +11,14 @@ namespace TG
 namespace catalogue
 {
 
-Requst::Requst():text(""), start(text) {}
-
-Requst::Requst(std::string textInput):text(textInput), start(text) {}
-Requst::Requst(std::string text, std::string_view start):text(text), start(start) {}
-
-BusInput::BusInput():name(""), request(""), stops({}){}
-BusInput::BusInput(std::string name, std::string request, std::vector <std::string_view> stops):name(name), request(request), stops(stops){}
-
-Bus::Bus():name(""), stops({}), countUnicStops(0), distance(0), curvature(0), isRoundtrip(false){}
-Bus::Bus(std::string name, std::vector <Stop*> stops, uint32_t countUnicStops, uint32_t distance, double_t curvature, bool isRoundtrip)
-               :name(name), stops(stops), countUnicStops(countUnicStops), distance(distance), curvature(curvature), isRoundtrip(isRoundtrip){}
-
-BusInfo::BusInfo():name(""), countStops(0), countUnicStops(0), distance(0), curvature(0) {}
-BusInfo::BusInfo(std::string name, uint32_t countStops, uint32_t countUnicStops, uint32_t distance, double_t curvature)
-                   :name(name), countStops(countStops), countUnicStops(countUnicStops), distance(distance), curvature(curvature) {}
-
-StopInfo::StopInfo():name(""), buses({}){}
-StopInfo::StopInfo(std::string name, std::vector <std::string_view> buses):name(name), buses(buses){}
-
-size_t DurationHasher::operator() (const std::pair <const Stop*, const Stop*>& f) const {
+size_t DurationHasher::operator() (const std::pair <const domain::Stop*, const domain::Stop*>& f) const {
     //std::hash<Stop*> dHasher;
     //return (dHasher(f.first) << 32) | dHasher(f.second);
     // не знаю какой из хешеров лучше
     return std::hash<const void*>{}(f.first) * 37 + std::hash<const void*>{}(f.second) * pow(37, 3);
 }
 
-void TransportCatalogue::AddStop(const Requst &requst)
+void TransportCatalogue::AddStop(const domain::Requst &requst)
 {
     size_t fName = requst.start.find_first_of(':');
     size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
@@ -49,7 +30,7 @@ void TransportCatalogue::AddStop(const Requst &requst)
     stopnameToStops_.insert({stops_.back().name, &stops_.back()});
 }
 
-void TransportCatalogue::AddDurationsBetweenStop(const Requst &requst)
+void TransportCatalogue::AddDurationsBetweenStop(const domain::Requst &requst)
 {
     size_t fName = requst.start.find_first_of(':');
     size_t fSplitCoordinates = requst.start.find_first_of(',', fName);
@@ -92,7 +73,7 @@ void TransportCatalogue::AddDurationsBetweenStop(const Requst &requst)
 
 }
 
-bool TransportCatalogue::FindStop(const Requst &requst, StopInfo &answer) const
+bool TransportCatalogue::FindStop(const domain::Requst &requst, domain::StopInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;
@@ -114,7 +95,7 @@ bool TransportCatalogue::FindStop(const Requst &requst, StopInfo &answer) const
     return true;
 }
 
-void TransportCatalogue::AddBus(const Requst & requst)
+void TransportCatalogue::AddBus(const domain::Requst & requst)
 {
     size_t fName = requst.start.find_first_of(':');
     string_view name = requst.start.substr(0, fName);
@@ -150,14 +131,14 @@ void TransportCatalogue::AddBus(const Requst & requst)
         fStartStops = fSplit + 1;
     }
 
-    Stop *firstStop = nullptr;
+    domain::Stop *firstStop = nullptr;
     set <string_view> uinicStops;
     uint32_t factDistans = 0;
     double_t geoDist = 0;
 
     buses_.push_back({move(nameS), {}, 0, 0, 0, !lineTrip});
 
-    Bus & addedBus = buses_.back();
+    domain::Bus & addedBus = buses_.back();
     for (string_view value : stops)
     {
         auto f = stopnameToStops_.find(value);
@@ -197,14 +178,14 @@ void TransportCatalogue::AddBus(const Requst & requst)
     addedBus.curvature =  static_cast<double_t>(factDistans) /geoDist;
 }
 
-std::map <const string_view, const Bus *> TransportCatalogue::GetBusesInfo() const
+std::map <const string_view, const domain::Bus *> TransportCatalogue::GetBusesInfo() const
 {
     return {busNameToBus_.begin(), busNameToBus_.end()};
 }
 
-std::map<const string_view, const Stop *> TransportCatalogue::GetUsedStopInfo() const
+std::map<const string_view, const domain::Stop *> TransportCatalogue::GetUsedStopInfo() const
 {
-    std::map<const string_view, const Stop *> answer;
+    std::map<const string_view, const domain::Stop *> answer;
     for (const auto & stop: stops_)
     {
         if(!stop.buses.empty())
@@ -213,7 +194,7 @@ std::map<const string_view, const Stop *> TransportCatalogue::GetUsedStopInfo() 
     return answer;
 }
 
-bool TransportCatalogue::FindBus(const Requst &requst,  BusInfo &answer) const
+bool TransportCatalogue::FindBus(const domain::Requst &requst,  domain::BusInfo &answer) const
 {
     size_t fStart = requst.start.find_first_not_of(" ");
     size_t fEnd = requst.start.size() - 1;
