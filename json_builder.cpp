@@ -15,7 +15,7 @@ KeyContext Builder::Key(std::string value)
     if (lastCommand_ == Commands::Key)
         throw std::logic_error("trying to call key aftre key");
     if(!nodes_stack_.back()->IsMap())
-        throw std::logic_error("trying to call key aftre key");
+        throw std::logic_error("trying to call key for not map");
 
     lastKey_ = std::move(value);
     lastCommand_ = Commands::Key;
@@ -36,7 +36,7 @@ BaseContext Builder::Value(Node::Value value)
     else if (nodes_stack_.back()->IsMap())
     {
         if (lastCommand_ != Commands::Key)
-             throw std::logic_error("trying to call value");
+             throw std::logic_error("trying to call value without key for map");
 
         Node t;
         t.GetValue() = value;
@@ -50,7 +50,7 @@ BaseContext Builder::Value(Node::Value value)
     }
     else
     {
-        throw std::logic_error("trying to call value");
+        throw std::logic_error("uncorrect trying to call value");
     }
 
     lastCommand_ = Commands::Value;
@@ -80,7 +80,7 @@ StartDictContext Builder::StartDict()
     }
     else
     {
-        throw std::logic_error("");
+        throw std::logic_error("uncorrect trying to call start map");
     }
 
     lastCommand_ = Commands::StartDict;
@@ -110,7 +110,7 @@ StartArrayContext Builder::StartArray()
     }
     else
     {
-        throw std::logic_error("");
+        throw std::logic_error("uncorrect trying to call start array");
     }
 
     lastCommand_ = Commands::StartArray;
@@ -123,7 +123,7 @@ EndDictContext Builder::EndDict()
         throw std::logic_error("trying to make after build");
 
     if (!nodes_stack_.back()->IsMap())
-        throw std::logic_error("try to cloce not dict");
+        throw std::logic_error("try to end map for not map");
 
     nodes_stack_.pop_back();
     if (nodes_stack_.empty())
@@ -139,7 +139,7 @@ EndArrayContext Builder::EndArray()
         throw std::logic_error("trying to make after build");
 
     if (!nodes_stack_.back()->IsArray())
-        throw std::logic_error("try to cloce not dict");
+        throw std::logic_error("try to end array for not array");
 
     nodes_stack_.pop_back();
     if (nodes_stack_.empty())
