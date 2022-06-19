@@ -265,6 +265,10 @@ const Node::Value& Node::GetValue() const {
     return node_;
 }
 
+Node::Value& Node::GetValue() {
+    return node_;
+}
+
 bool Node::AsBool() const {
     if (!IsBool())
         throw std::logic_error("It isn't bool");

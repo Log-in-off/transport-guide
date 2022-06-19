@@ -37,6 +37,7 @@ public:
     Node(const Dict &value);
     Node(const Array &value);
     const Value& GetValue() const;
+    Value& GetValue();
 
     bool AsBool() const;
     int AsInt() const;
