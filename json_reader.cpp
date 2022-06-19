@@ -1,7 +1,7 @@
 #include "json_reader.h"
 
 #include <sstream>
-
+#include "json_builder.h"
 
 /*
  * Здесь можно разместить код наполнения транспортного справочника данными из JSON,
@@ -74,7 +74,7 @@ void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &
             }
             out.push_back(newNode);
         }
-        json::Print(json::Document{out}, output);
+        json::Print(json::Document{json::Builder{}.Value(out).Build()}, output);
     }
 }
 
