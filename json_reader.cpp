@@ -10,7 +10,7 @@
 
 namespace TG
 {
-void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::RequestHandler &transport, renderer::MapRenderer *map)
+void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::RequestHandler &transport, renderer::MapRenderer *map, TR::TransportRouter *router)
 {
     json::Document doc = json::Load(iStream);
     if (doc.GetRoot().IsMap())
@@ -21,7 +21,13 @@ void ReaderJSON::GetQueries(std::istream &iStream, std::ostream& output, RH::Req
         if (map)
             GetSettingsForMap(doc, map);
 
-        GetRequstsToCatalogue(doc, transport, output, map);
+        if (router)
+        {
+            GetSettingsForRouter(doc, router);
+            router->MakeRoutigGraph(transport);
+        }
+
+        GetRequstsToCatalogue(doc, transport, output, map, router);
     }
 }
 
@@ -48,7 +54,7 @@ void ReaderJSON::FillingCatalogue(json::Document &doc, RH::RequestHandler &trans
     transport.AddAllBuses(buses);
 }
 
-void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &transport, std::ostream &output, renderer::MapRenderer *map)
+void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &transport, std::ostream &output, renderer::MapRenderer *map, TR::TransportRouter *router)
 {
     auto findStat = doc.GetRoot().AsMap().find("stat_requests");
     if (findStat != doc.GetRoot().AsMap().end() && findStat->second.IsArray() && !findStat->second.AsArray().empty())
@@ -72,9 +78,26 @@ void ReaderJSON::GetRequstsToCatalogue(json::Document &doc, RH::RequestHandler &
             {
                 MakeAnswerMap(transport, newNode, map);
             }
+            else if (tagRoute == value.AsMap().at("type").AsString())
+            {
+                MakeAnswerRouter(newNode, router);
+            }
             out.push_back(newNode);
         }
         json::Print(json::Document{json::Builder{}.Value(out).Build()}, output);
+    }
+}
+
+void ReaderJSON::GetSettingsForRouter(json::Document &doc, TR::TransportRouter *router)
+{
+    auto findStat = doc.GetRoot().AsMap().find("routing_settings");
+    if (findStat != doc.GetRoot().AsMap().end() && (!doc.GetRoot().AsMap().empty()))
+    {
+        TR::RoutingSettings param;
+        auto inputParam = findStat->second.AsMap();
+        param.bus_velocity = inputParam.at("bus_velocity").AsInt();
+        param.bus_wait_time = inputParam.at("bus_wait_time").AsInt();
+        router->SetSettings(std::move(param));
     }
 }
 
@@ -209,5 +232,10 @@ void ReaderJSON::MakeAnswerMap(RH::RequestHandler &transport, json::Dict &node, 
     node.emplace("map", ss.str());
 }
 
+
+void ReaderJSON::MakeAnswerRouter(json::Dict &node, TR::TransportRouter *router)
+{
+
+}
 
 }

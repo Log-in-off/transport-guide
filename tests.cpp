@@ -103,6 +103,7 @@ void TestAddRouteBeforeStops()
 #include "tests.h"
 #include "input_reader.h"
 #include "stat_reader.h"
+#include "transport_router.h"
 
 void testTask3(void)
 {
@@ -166,7 +167,6 @@ void testTaskJsonN(void)
         TG::RH::RequestHandler handler(catalogue);
         reader.GetQueries(ifs, cout, handler);
     }
-
 }
 
 void testMain(void)
@@ -176,4 +176,19 @@ void testMain(void)
     TG::ReaderJSON reader;
     TG::RH::RequestHandler handler(catalogue);
     reader.GetQueries(cin, cout, handler);
+}
+
+void testTaskGraph1(void)
+{
+    using namespace std;
+    ifstream ifs("graph1.json");
+    if( ifs.is_open())
+    {
+        TG::catalogue::TransportCatalogue catalogue;
+        TG::ReaderJSON reader;
+        TG::RH::RequestHandler transport(catalogue);
+        TG::renderer::MapRenderer map;
+        TG::TR::TransportRouter router;
+        reader.GetQueries(ifs, cout, transport, &map, &router);
+    }
 }

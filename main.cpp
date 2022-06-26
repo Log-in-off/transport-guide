@@ -19,10 +19,12 @@ using namespace std;
 
 #include "test_map_renderer.h"
 #include "test_json.h"
+#include "tests.h"
 int main()
 {
-    testRender2_1();
+    testTaskGraph1();
     return 0;
+    testRender2_1();
     testRender3_1();
     testJSON();
     testRender();
