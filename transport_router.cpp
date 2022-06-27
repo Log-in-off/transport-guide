@@ -14,6 +14,8 @@ void TransportRouter::MakeRoutigGraph(RH::RequestHandler &transport)
 {
     base_ = transport.GetBuses();
     stops_ = transport.GetUsedStop();
+    graph_ = std::make_unique<graph::DirectedWeightedGraph<Weighted>>(stops_->size()*2);
+
 }
 
 

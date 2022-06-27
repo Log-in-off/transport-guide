@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <map>
 #include <string_view>
@@ -19,6 +20,11 @@ struct RoutingSettings
     int bus_velocity;
 };
 
+struct Weighted
+{
+    double time;
+};
+
 class TransportRouter
 {
 public:
@@ -28,7 +34,7 @@ private:
     std::optional<RoutingSettings> settings_;
     std::optional<std::map <const std::string_view, const domain::Bus *>> base_;
     std::optional<std::map <const std::string_view, const domain::Stop *>> stops_;
-
+    std::unique_ptr<graph::DirectedWeightedGraph<Weighted>> graph_;
 };
 
 }
